@@ -1,0 +1,10 @@
+﻿<div>
+    <div class="pomelo-new-connection-menu-title"><i class="fa fa-link"></i> New Connection</div>
+    <div class="pomelo-new-connection-menu-item" v-for="x in extensions">
+        <img v-bind:src="'/static/' + x.id + x.icon" />
+        <div>
+            <div class="pomelo-new-connection-menu-item-provider">{{ x.title }}</div>
+            <div class="pomelo-new-connection-menu-item-description">{{ x.description }}</div>
+        </div>
+    </div>
+</div>

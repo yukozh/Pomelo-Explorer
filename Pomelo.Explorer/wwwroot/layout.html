@@ -1,0 +1,19 @@
+﻿<div>
+    <div class="pomelo-instance-tab">
+        <a v-on:click="$root.redirect('/create')" class="pomelo-instance-tab-item active" title="New Connection">
+            <i class="fa fa-link"></i>
+        </a>
+        <a v-on:click="$root.redirect('/static/mysql/Resource/create/index')" class="pomelo-instance-tab-item" title="New Connection">
+            <i class="fa fa-pie-chart"></i>
+        </a>
+    </div>
+    <div class="pomelo-instance-menu" v-show="$root.menu">
+        <router-menu></router-menu>
+    </div>
+    <div class="pomelo-instance-main">
+        <router-view></router-view>
+    </div>
+    <div class="pomelo-statusbar">
+        
+    </div>
+</div>

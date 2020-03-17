@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no,user-scalable=no">
+    <link href="/assets/css/pomelo.css" rel="stylesheet" />
+    <link href="assets/css/font-awesome.css" rel="stylesheet" />
+
+    <script>
+        window.nodeRequire = require;
+        delete window.require;
+        delete window.exports;
+        delete window.module;
+    </script>
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/i18n.js"></script>
+    <script src="/assets/js/vue.js"></script>
+    <script src="/assets/js/vue-router.js"></script>
+    <script src="/assets/js/vue-i18n.js"></script>
+    <script src="/assets/js/pomelo.vlazy.js"></script>
+    <script src="/assets/js/pomelo.queryview.js"></script>
+    <script src="index.js"></script>
+    <title>Pomelo</title>
+</head>
+<body>
+    <div id="app" v-cloak>
+        <render-layout></render-layout>
+    </div>
+    <script src="index.js"></script>
+</body>
+</html>
