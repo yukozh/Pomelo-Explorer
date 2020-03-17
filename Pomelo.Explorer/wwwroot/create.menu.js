@@ -1,15 +1,15 @@
 ﻿component.data = function () {
     return {
-        extensions: []
+        extensions: [],
+        provider: null
     };
 };
 
 component.methods = {
     getExtensionList: function () {
-        var self = this;
-        self.extensions = qv.createView('/extension/list', { creatable: false })
-            .fetch((data) => {
-                self.extensions = data;
+        app.getMenu().extensions = qv.get('/extension/list', { creatable: false })
+            .then((data) => {
+                app.getMenu().extensions = data;
             });
     }
 };

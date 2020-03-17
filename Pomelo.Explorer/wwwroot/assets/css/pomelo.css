@@ -71,6 +71,7 @@ body {
 .pomelo-new-connection-menu-item {
     height: 50px;
     padding: 15px;
+    display: block;
 }
 
     .pomelo-new-connection-menu-item img {

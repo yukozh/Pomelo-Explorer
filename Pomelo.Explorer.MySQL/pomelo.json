@@ -2,7 +2,7 @@
   "id": "mysql",
   "version": "0.1.0",
   "icon": "/icon.png",
-  "create": "/create/index",
+  "create": "/Resource/create/index",
   "title": "MySQL",
   "description": "Supports browse MySQL, MariaDB"
 }

@@ -1,1 +1,5 @@
-﻿alert('Hello World');
+﻿menu('/create');
+
+component.created = function () {
+    app.getMenu().provider = 'mysql';
+};

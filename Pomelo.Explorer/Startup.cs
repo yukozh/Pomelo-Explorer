@@ -54,8 +54,8 @@ namespace Pomelo.Explorer
             });
 
             var partManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();
-            AddAssembly(@"C:\Users\Yuko\Documents\GitHub\PomeloDBExplorer\electron.net-api-demos-master\Pomelo.Explorer.MySQL\bin\Debug\netcoreapp3.0\Pomelo.Explorer.MySQL.dll", partManager);
-            AddAssembly(@"C:\Users\Yuko\Documents\GitHub\PomeloDBExplorer\electron.net-api-demos-master\Pomelo.Explorer.MySQL\bin\Debug\netcoreapp3.0\Pomelo.Explorer.MySQL.Views.dll", partManager);
+            AddAssembly(@"C:\Users\Yuko\Documents\GitHub\Pomelo-Explorer\Pomelo.Explorer.MySQL\bin\Debug\netcoreapp3.0\Pomelo.Explorer.MySQL.dll", partManager);
+            AddAssembly(@"C:\Users\Yuko\Documents\GitHub\Pomelo-Explorer\Pomelo.Explorer.MySQL\bin\Debug\netcoreapp3.0\Pomelo.Explorer.MySQL.Views.dll", partManager);
 
             if (HybridSupport.IsElectronActive)
             {

@@ -32,9 +32,15 @@ var appBuilder = {
             .then((data) => { return data.text() })
             .catch((err) => { return Promise.resolve('') });
     },
-    buildComponent: function (template, script) {
+    buildComponent: async function (template, script, menuFunc) {
         var component = { template: template };
+        var promise;
+        var menu = (url) => {
+            promise =  menuFunc(url);
+        };
         eval(script);
+        await promise;
+        console.log(component);
         return component;
     },
     addRoute: function (url, component) {
@@ -47,10 +53,23 @@ var appBuilder = {
         if (this.router.apps.some(x => x._route.path === url))
             return;
 
+        var self = this;
+        var menu = async function (menuUrl) {
+            var menuHtml = await self.getTemplate(menuUrl + '.menu');
+            var menuJs = await self.getScript(menuUrl + '.menu');
+            var menuComponent = await self.buildComponent(menuHtml, menuJs, menu);
+            if (menuComponent.created === undefined) {
+                menuComponent.created = function () { };
+            }
+            var tmpFunc = menuComponent.created;
+            menuComponent.created = function () { tmpFunc(); this.$root.menu = true; };
+            self.addMenuRoute(url, menuComponent);
+        };
+
         if (!isMenu) {
             html = await this.getTemplate(url);
             js = await this.getScript(url);
-            var component = this.buildComponent(html, js);
+            var component = await this.buildComponent(html, js, menu);
             if (component.computed === undefined) {
                 component.computed = {};
             }
@@ -74,7 +93,7 @@ var appBuilder = {
             if (!js) {
                 js = 'component.created = function () { this.$root.menu = false; }';
             }
-            var component = this.buildComponent(html, js);
+            var component = await this.buildComponent(html, js, menu);
             if (!nomenu) {
                 if (component.created === undefined) {
                     component.created = function () { };
