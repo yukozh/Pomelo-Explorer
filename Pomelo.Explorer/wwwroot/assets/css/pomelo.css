@@ -56,6 +56,15 @@ body {
 
 .pomelo-instance-main {
     color: #d4d4d4;
+    position: fixed;
+    left: 300px;
+    bottom: 25px;
+    top: 0;
+    right: 0;
+}
+
+.pomelo-instance-main-padding {
+    padding: 15px;
 }
 
 .pomelo-new-connection-menu-title {
@@ -94,3 +103,45 @@ body {
 .pomelo-new-connection-menu-item:hover, .pomelo-new-connection-menu-item.active {
     background: rgb(42,45,46);
 }
+
+.textbox, .dropdown {
+    width: calc(100% - 12px);
+    background: rgb(60,60,60);
+    outline: 0;
+    border: 1px solid rgb(60,60,60);
+    color: rgb(156,166,156);
+    line-height: 24px;
+    font-size: 14px;
+    padding: 0 5px;
+    height: 24px;
+}
+
+.dropdown {
+    height: 26px;
+}
+
+    .textbox:focus, .dropdown:focus {
+        border-color: rgb(0,124,202);
+    }
+
+.form-section {
+    margin-bottom: 15px;
+}
+
+.button {
+    background: rgb(14,99,156);
+    line-height: 35px;
+    height: 35px;
+    padding: 0 15px;
+    color: #fff;
+    font-size: 14px;
+    border: none;
+}
+
+    .button:hover {
+        background: rgb(17,119,187);
+    }
+
+    .button.disabled {
+        background: rgb(28,62,85);
+    }

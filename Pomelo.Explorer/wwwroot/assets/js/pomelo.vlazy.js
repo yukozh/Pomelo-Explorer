@@ -32,6 +32,11 @@ var appBuilder = {
             .then((data) => { return data.text() })
             .catch((err) => { return Promise.resolve('') });
     },
+    getCss: function (url) {
+        return fetch(url + '.css')
+            .then((data) => { return data.text() })
+            .catch((err) => { return Promise.resolve('') });
+    },
     buildComponent: async function (template, script, menuFunc) {
         var component = { template: template };
         var promise;
@@ -49,6 +54,17 @@ var appBuilder = {
     addMenuRoute: function (url, component) {
         router.addRoutes([{ path: url + '.menu', name: url + '.menu', component: component }]);
     },
+    buildCreatedFunction: function (component, func) {
+        if (component.created === undefined) {
+            component.created = function () { };
+        }
+        var origin = component.created;
+        component.created = function () {
+            // Others
+            origin();
+            func.call(this);
+        };
+    },
     loadComponentIfNotExist: async function (url, isMenu) {
         if (this.router.apps.some(x => x._route.path === url))
             return;
@@ -57,12 +73,11 @@ var appBuilder = {
         var menu = async function (menuUrl) {
             var menuHtml = await self.getTemplate(menuUrl + '.menu');
             var menuJs = await self.getScript(menuUrl + '.menu');
+            var menuCss = await self.getCss(menuUrl + '.menu');
             var menuComponent = await self.buildComponent(menuHtml, menuJs, menu);
-            if (menuComponent.created === undefined) {
-                menuComponent.created = function () { };
-            }
-            var tmpFunc = menuComponent.created;
-            menuComponent.created = function () { tmpFunc(); this.$root.menu = true; };
+            self.buildCreatedFunction(menuComponent, function () {
+                this.$root.menu = true;
+            });
             self.addMenuRoute(url, menuComponent);
         };
 
@@ -70,17 +85,19 @@ var appBuilder = {
             html = await this.getTemplate(url);
             js = await this.getScript(url);
             var component = await this.buildComponent(html, js, menu);
-            if (component.computed === undefined) {
-                component.computed = {};
-            }
-            component.computed.menu = function () {
-                var menuPath = this.$route.path + '.menu';
-                var matched = this.$root._router.matcher.match(menuPath).matched;
-                if (matched.length)
-                    return matched[0].instances.default;
-                else
-                    return null;
-            };
+            this.buildCreatedFunction(component, function () {
+                if ($('#component-css').length === 0) {
+                    $('head').append(`<link id="component-css" href="${(url + '.css')}" rel="stylesheet" />`);
+                } else {
+                    $('#component-css').attr('href', url + '.css');
+                }
+
+                if ($('#menu-css').length === 0) {
+                    $('head').append(`<link id="menu-css" href="${(url + '.menu.css')}" rel="stylesheet" />`);
+                } else {
+                    $('#menu-css').attr('href', url + '.menu.css');
+                }
+            });
             this.addRoute(url, component);
         } else {
             html = await this.getTemplate(url + '.menu');
@@ -95,11 +112,9 @@ var appBuilder = {
             }
             var component = await this.buildComponent(html, js, menu);
             if (!nomenu) {
-                if (component.created === undefined) {
-                    component.created = function () { };
-                }
-                var tmpFunc = component.created;
-                component.created = function () { tmpFunc(); this.$root.menu = true; };
+                this.buildCreatedFunction(component, function () {
+                    this.$root.menu = true;
+                });
             }
             this.addMenuRoute(url, component);
         }

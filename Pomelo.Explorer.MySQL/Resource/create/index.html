@@ -1,3 +1,58 @@
-﻿<div>
-    This page is from MySQL extension
+﻿<div class="pomelo-instance-main-padding">
+    <div class="pomelo-mysql-main-narrow">
+        <div class="pomelo-mysql-create-header">
+            <img src="/static/mysql/icon.png" />
+            <div>
+                <div class="pomelo-mysql-create-header-title">MySQL</div>
+                <div class="pomelo-mysql-create-header-description">The following engines are supported:</div>
+                <div class="pomelo-mysql-create-header-description">- MySQL 5.6 / 5.7 / 8.0</div>
+                <div class="pomelo-mysql-create-header-description">- MariaDB 10.2 / 10.3 / 10.4</div>
+                <div class="pomelo-mysql-create-header-description">- Microsoft Azure / Amazon / AliCloud</div>
+                <div class="pomelo-mysql-create-header-description">- PingCAP TiDB</div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="pomelo-mysql-create-configure">
+            <div id="form-create-mysql-connection" action="/mysql/create-conn" method="post">
+                <div class="form-section">
+                    <label>
+                        Server address<br />
+                        <input name="address" type="text" class="textbox" />
+                    </label>
+                </div>
+                <div class="form-section">
+                    <label>
+                        Port<br />
+                        <input name="port" type="text" class="textbox" />
+                    </label>
+                </div>
+                <div class="form-section">
+                    <label>
+                        Username<br />
+                        <input name="username" type="text" class="textbox" />
+                    </label>
+                </div>
+                <div class="form-section">
+                    <label>
+                        Password<br />
+                        <input name="password" type="password" class="textbox" />
+                    </label>
+                </div>
+                <div class="form-section">
+                    <label>
+                        SSL Option<br />
+                        <select name="ssl" class="dropdown" style="width: auto">
+                            <option>None</option>
+                            <option>Preferred</option>
+                            <option>Restricted</option>
+                            <option>Custom SSL Client Certificate</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="form-section">
+                    <button role="button" class="button">Connect</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

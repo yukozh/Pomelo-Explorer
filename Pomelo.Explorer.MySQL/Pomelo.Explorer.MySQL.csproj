@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <None Remove="icon.png" />
+    <None Remove="Resource\create\index.css" />
     <None Remove="Resource\create\index.html" />
     <None Remove="Resource\create\index.js" />
   </ItemGroup>
