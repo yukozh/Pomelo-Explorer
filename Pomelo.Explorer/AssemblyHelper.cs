@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Reflection;
 using Newtonsoft.Json;
+using Microsoft.Extensions.Configuration;
 
 namespace Pomelo.Explorer
 {
@@ -18,6 +19,44 @@ namespace Pomelo.Explorer
             {
                 var json = sr.ReadToEnd();
                 return JsonConvert.DeserializeObject<ExtensionDescriptor>(json);
+            }
+        }
+
+        public static IEnumerable<string> FindPomeloExtensions()
+        {
+            var paths = Startup.Configuration.GetSection("Extension").GetSection("Paths").Get<IEnumerable<string>>();
+            var ret = new List<string>();
+            foreach (var p in paths)
+            {
+                ret.AddRange(FindPomeloExtensions(p));
+            }
+            return ret;
+        }
+
+        public static IEnumerable<string> FindPomeloExtensions(string path)
+        {
+            var files = Directory.EnumerateFiles(path, "*.dll", SearchOption.AllDirectories);
+            foreach (var x in files)
+            {
+                Assembly assembly;
+                try
+                {
+                    assembly = Assembly.LoadFrom(x);
+                    if (assembly.GetManifestResourceNames().All(x => !x.EndsWith("pomelo.json")))
+                    {
+                        continue;
+                    }
+                }
+                catch (FileLoadException)
+                {
+                    continue;
+                }
+                catch (BadImageFormatException)
+                {
+                    continue;
+                }
+
+                yield return x;
             }
         }
 

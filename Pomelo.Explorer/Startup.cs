@@ -1,6 +1,7 @@
 ﻿using System.Runtime.Loader;
 using System.Resources;
 using System.Linq;
+using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -20,7 +21,7 @@ namespace Pomelo.Explorer
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        public static IConfiguration Configuration { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -54,8 +55,16 @@ namespace Pomelo.Explorer
             });
 
             var partManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();
-            AddAssembly(@"C:\Users\Yuko\Documents\GitHub\Pomelo-Explorer\Pomelo.Explorer.MySQL\bin\Debug\netcoreapp3.0\Pomelo.Explorer.MySQL.dll", partManager);
-            AddAssembly(@"C:\Users\Yuko\Documents\GitHub\Pomelo-Explorer\Pomelo.Explorer.MySQL\bin\Debug\netcoreapp3.0\Pomelo.Explorer.MySQL.Views.dll", partManager);
+            var paths = AssemblyHelper.FindPomeloExtensions();
+            foreach (var p in paths)
+            {
+                AddAssembly(p, partManager);
+                var viewPath = p.Substring(0, p.Length - 3) + "Views.dll";
+                if (File.Exists(viewPath))
+                {
+                    AddAssembly(viewPath, partManager);
+                }
+            }
 
             if (HybridSupport.IsElectronActive)
             {
@@ -92,7 +101,7 @@ namespace Pomelo.Explorer
                 DarkTheme = true
             }, $"http://localhost:{BridgeSettings.WebPort}/index.html");
             //browserWindow.OnReadyToShow += () => browserWindow.Show();
-            browserWindow.SetTitle("Electron.NET API Demos");
+            browserWindow.SetTitle("Pomelo Explorer");
         }
     }
 }
