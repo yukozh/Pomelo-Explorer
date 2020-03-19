@@ -17,40 +17,40 @@
                 <div class="form-section">
                     <label>
                         Server address<br />
-                        <input name="address" type="text" class="textbox" />
+                        <input type="text" class="textbox" v-model="form.address" />
                     </label>
                 </div>
                 <div class="form-section">
                     <label>
                         Port<br />
-                        <input name="port" type="text" class="textbox" />
+                        <input type="text" class="textbox" v-model="form.port" />
                     </label>
                 </div>
                 <div class="form-section">
                     <label>
                         Username<br />
-                        <input name="username" type="text" class="textbox" />
+                        <input type="text" class="textbox" v-model="form.username" />
                     </label>
                 </div>
                 <div class="form-section">
                     <label>
                         Password<br />
-                        <input name="password" type="password" class="textbox" />
+                        <input type="password" class="textbox" v-model="form.password" />
                     </label>
                 </div>
                 <div class="form-section">
                     <label>
                         SSL Option<br />
-                        <select name="ssl" class="dropdown" style="width: auto">
-                            <option>None</option>
-                            <option>Preferred</option>
-                            <option>Restricted</option>
-                            <option>Custom SSL Client Certificate</option>
+                        <select name="ssl" class="dropdown" style="width: auto" v-model="form.ssl">
+                            <option value="None">None</option>
+                            <option value="Preferred">Preferred</option>
+                            <option value="Restricted">Restricted</option>
+                            <option value="CustomSslCert">Custom SSL Client Certificate</option>
                         </select>
                     </label>
                 </div>
                 <div class="form-section">
-                    <button role="button" class="button">Connect</button>
+                    <button v-on:click="connect" role="button" class="button">Connect</button>
                 </div>
             </div>
         </div>

@@ -13,6 +13,10 @@
       "executablePath": "electronize",
       "commandLineArgs": "start",
       "workingDirectory": "."
+    },
+    "Kestrel": {
+      "commandName": "Project",
+      "applicationUrl": "http://localhost:6246"
     }
   }
 }
