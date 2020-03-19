@@ -26,5 +26,9 @@
     <Folder Include="Resource\browse\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MySqlConnector" Version="0.62.0" />
+  </ItemGroup>
+
 
 </Project>

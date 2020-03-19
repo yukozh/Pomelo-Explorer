@@ -145,3 +145,14 @@ body {
     .button.disabled {
         background: rgb(28,62,85);
     }
+
+.pomelo-instance-menu-drag {
+    z-index: 10000;
+    width: 3px;
+    position: fixed;
+    background: none;
+    cursor: col-resize;
+    top: 0;
+    bottom: 25px;
+    left: 297px;
+}
