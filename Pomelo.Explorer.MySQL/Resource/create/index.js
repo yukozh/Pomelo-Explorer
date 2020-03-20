@@ -36,10 +36,7 @@ component.methods = {
     test: function () {
         var self = this;
         self.working = true;
-        qv.post('/mysql/createconnection', self.form)
-            .then(function (data) {
-                return qv.post('/mysql/openconnection/' + data.id, {});
-            })
+        qv.post('/mysql/testconnection', self.form)
             .then(function () {
                 app.dialog('info', 'MySQL', `Your credential is ok on ${self.form.address}`);
                 return Promise.resolve();

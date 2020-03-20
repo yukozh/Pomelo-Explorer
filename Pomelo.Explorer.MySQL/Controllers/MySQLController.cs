@@ -45,5 +45,27 @@ namespace Pomelo.Explorer.MySQL.Controllers
 
             return Json("OK");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> TestConnection([FromBody]CreateConnectionRequest request)
+        {
+            using (var client = new MySqlConnection($"Server={request.Address}; Port={request.Port}; Uid={request.Username}; Pwd={request.Password}; Pooling=False"))
+            {
+                try
+                {
+                    await client.OpenAsync();
+                }
+                catch (MySqlException ex)
+                {
+                    Response.StatusCode = 400;
+                    return Json(new DBError
+                    {
+                        Code = ex.Number,
+                        Message = ex.Message
+                    });
+                }
+                return Json("OK");
+            }
+        }
     }
 }
