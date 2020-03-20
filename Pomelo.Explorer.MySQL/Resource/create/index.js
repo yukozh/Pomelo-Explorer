@@ -22,7 +22,7 @@ component.methods = {
                 alert('OK');
             })
             .catch(function (data) {
-                alert(data.responseJSON.code + ' - ' + data.responseJSON.message);
+                app.dialog('error', 'MySQL Error', data.responseJSON.code + ' - ' + data.responseJSON.message);
             });
     }
 };

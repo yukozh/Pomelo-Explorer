@@ -19,6 +19,9 @@
                 return matched[0].instances.default;
             else
                 return null;
+        },
+        dialog: function (icon, title, message) {
+            qv.post('/dialog/show', { icon: icon, title: title, message: message });
         }
     }
 });

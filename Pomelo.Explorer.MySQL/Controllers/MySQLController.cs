@@ -10,7 +10,7 @@ namespace Pomelo.Explorer.MySQL.Controllers
     public class MySQLController : Controller
     {
         [HttpPost]
-        public IActionResult CreateConnection(CreateConnectionRequest request)
+        public IActionResult CreateConnection([FromBody]CreateConnectionRequest request)
         {
             var client = new MySqlConnection($"Server={request.Address}; Port={request.Port}; Uid={request.Username}; Pwd={request.Password}; Pooling=False");
             var timestamp = DateTime.UtcNow.Ticks.ToString();
