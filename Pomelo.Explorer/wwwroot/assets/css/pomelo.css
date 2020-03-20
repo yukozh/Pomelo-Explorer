@@ -45,12 +45,25 @@ body {
     border-left: 5px solid rgba(0,0,0,0);
 }
 
+    .pomelo-instance-tab-item img {
+        opacity: 0.5;
+    }
+
     .pomelo-instance-tab-item:hover {
         color: #fff;
     }
 
+    .pomelo-instance-tab-item:hover img {
+        opacity: 1;
+    }
+
     .pomelo-instance-tab-item.active {
         color: #fff;
+        border-left: 3px solid #fff;
+    }
+
+    .pomelo-instance-tab-item.active img {
+        opacity: 1;
         border-left: 3px solid #fff;
     }
 
