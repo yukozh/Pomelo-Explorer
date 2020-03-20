@@ -38,7 +38,7 @@ component.methods = {
         self.working = true;
         qv.post('/mysql/testconnection', self.form)
             .then(function () {
-                app.dialog('info', 'MySQL', `Your credential is ok on ${self.form.address}`);
+                app.dialog('info', 'MySQL', `Connect to ${self.form.username}@${self.form.address} succeeded.`);
                 return Promise.resolve();
             })
             .catch(function (data) {
