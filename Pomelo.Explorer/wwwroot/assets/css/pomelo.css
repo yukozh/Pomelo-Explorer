@@ -157,3 +157,9 @@ body {
     bottom: 25px;
     left: 297px;
 }
+
+.pomelo-instance-tab-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 5px;
+}

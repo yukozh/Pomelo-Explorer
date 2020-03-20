@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "icon": "/icon.png",
   "create": "/Resource/create/index",
+  "view": "/Resource/browse/index",
+  "singleton": false,
   "title": "MySQL",
   "description": "Supports browse MySQL, MariaDB"
 }

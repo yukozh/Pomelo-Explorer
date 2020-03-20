@@ -19,10 +19,10 @@ component.methods = {
         self.working = true;
         qv.post('/mysql/createconnection', self.form)
             .then(function (data) {
+                app.pushInstance(data.id, 'mysql');
                 return qv.post('/mysql/openconnection/' + data.id, { });
             })
             .then(function () {
-                // TODO: Refresh tab
                 return Promise.resolve();
             })
             .catch(function (data) {

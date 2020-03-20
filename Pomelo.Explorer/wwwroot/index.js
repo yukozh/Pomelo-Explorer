@@ -1,7 +1,14 @@
 ﻿var app = new Vue({
     router: router,
     data: {
-        menu: false
+        menu: false,
+        tab: {
+            instances:[]
+        },
+        extensions:[]
+    },
+    created: function () {
+        this.getExtensions();
     },
     methods: {
         redirect: function (path, params) {
@@ -22,6 +29,21 @@
         },
         dialog: function (icon, title, message) {
             qv.post('/dialog/show', { icon: icon, title: title, message: message });
+        },
+        pushInstance: function (id, provider) {
+            this.tab.instances.push({
+                id: id,
+                provider: provider
+            });
+        },
+        popInstance: function (id) {
+            this.tab.instances.pop(this.tab.instances.pop.filter(x => x.id === id)[0]);
+        },
+        getExtensions: function () {
+            app.getMenu().extensions = qv.get('/extension/list', { creatable: false })
+                .then((data) => {
+                    this.extensions = data;
+                });
         }
     }
 });
