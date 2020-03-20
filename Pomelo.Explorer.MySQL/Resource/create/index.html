@@ -50,7 +50,8 @@
                     </label>
                 </div>
                 <div class="form-section">
-                    <button v-on:click="connect" role="button" class="button">Connect</button>
+                    <button v-on:click="connect" role="button" class="button" v-bind:class="{ 'disabled': working }" v-bind:disabled="working">Connect</button>
+                    <button v-on:click="test" role="button" class="button" v-bind:class="{ 'disabled': working }" v-bind:disabled="working">Test Connection</button>
                 </div>
             </div>
         </div>

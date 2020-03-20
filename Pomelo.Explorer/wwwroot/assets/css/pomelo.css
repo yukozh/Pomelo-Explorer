@@ -144,6 +144,7 @@ body {
 
     .button.disabled {
         background: rgb(28,62,85);
+        color: rgba(255, 255, 255, 0.4);
     }
 
 .pomelo-instance-menu-drag {

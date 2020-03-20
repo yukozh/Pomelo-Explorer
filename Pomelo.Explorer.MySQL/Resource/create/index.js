@@ -8,21 +8,48 @@ component.data = function () {
             ssl: 'None',
             username: null,
             password: null
-        }
+        },
+        working: false
     };
 };
 
 component.methods = {
     connect: function () {
-        qv.post('/mysql/createconnection', this.form)
+        var self = this;
+        self.working = true;
+        qv.post('/mysql/createconnection', self.form)
             .then(function (data) {
                 return qv.post('/mysql/openconnection/' + data.id, { });
             })
             .then(function () {
-                alert('OK');
+                // TODO: Refresh tab
+                return Promise.resolve();
             })
             .catch(function (data) {
                 app.dialog('error', 'MySQL Error', data.responseJSON.code + ' - ' + data.responseJSON.message);
+                return Promise.resolve();
+            })
+            .finally(function () {
+                self.working = false;
+            });
+    },
+    test: function () {
+        var self = this;
+        self.working = true;
+        qv.post('/mysql/createconnection', self.form)
+            .then(function (data) {
+                return qv.post('/mysql/openconnection/' + data.id, {});
+            })
+            .then(function () {
+                app.dialog('info', 'MySQL', `Your credential is ok on ${self.form.address}`);
+                return Promise.resolve();
+            })
+            .catch(function (data) {
+                app.dialog('error', 'MySQL Error', data.responseJSON.code + ' - ' + data.responseJSON.message);
+                return Promise.resolve();
+            })
+            .finally(function () {
+                self.working = false;
             });
     }
 };
