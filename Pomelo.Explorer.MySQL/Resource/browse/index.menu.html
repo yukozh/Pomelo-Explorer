@@ -1,0 +1,7 @@
+﻿<div>
+    <div class="pomelo-mysql-menu-title">Databases</div>
+    <div v-for="x in databases" class="pomelo-mysql-menu-database">
+        <i class="fa fa-database"></i> {{ x }}
+        <i class="pomelo-new-connection-menu-toggle fa" v-bind:class="{ 'fa-chevron-down': active == 'db', 'fa-chevron-right': active != 'db' }"></i>
+    </div>
+</div>

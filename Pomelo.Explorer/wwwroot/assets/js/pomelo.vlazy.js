@@ -119,9 +119,9 @@ var appBuilder = {
             this.addMenuRoute(url, component);
         }
     },
-    redirect: async function (path, params) {
+    redirect: async function (path, queries) {
         await this.loadComponentIfNotExist(path, false);
         await this.loadComponentIfNotExist(path, true);
-        this.router.push({ path: path, params: params });
+        this.router.push({ path: path, query: queries });
     }
 };

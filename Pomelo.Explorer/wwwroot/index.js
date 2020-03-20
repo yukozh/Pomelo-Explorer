@@ -11,8 +11,8 @@
         this.getExtensions();
     },
     methods: {
-        redirect: function (path, params) {
-            window.appBuilder.redirect(path, params);
+        redirect: function (path, queries) {
+            window.appBuilder.redirect(path, queries);
         },
         getMain: function () {
             if (this._router.history.current.matched.length)
@@ -40,9 +40,10 @@
             this.tab.instances.pop(this.tab.instances.pop.filter(x => x.id === id)[0]);
         },
         getExtensions: function () {
-            app.getMenu().extensions = qv.get('/extension/list', { creatable: false })
+            var self = this;
+            self.extensions = qv.get('/extension/list', { creatable: false })
                 .then((data) => {
-                    this.extensions = data;
+                    self.extensions = data;
                 });
         }
     }

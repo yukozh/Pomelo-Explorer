@@ -11,6 +11,11 @@
 
   <ItemGroup>
     <None Remove="icon.png" />
+    <None Remove="Resource\browse\index.html" />
+    <None Remove="Resource\browse\index.js" />
+    <None Remove="Resource\browse\index.menu.css" />
+    <None Remove="Resource\browse\index.menu.html" />
+    <None Remove="Resource\browse\index.menu.js" />
     <None Remove="Resource\create\index.css" />
     <None Remove="Resource\create\index.html" />
     <None Remove="Resource\create\index.js" />
@@ -20,10 +25,6 @@
     <EmbeddedResource Include="icon.png" />
     <EmbeddedResource Include="pomelo.json" />
     <EmbeddedResource Include="Resource\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Resource\browse\" />
   </ItemGroup>
 
   <ItemGroup>

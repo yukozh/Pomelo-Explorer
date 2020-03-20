@@ -1,0 +1,18 @@
+﻿.pomelo-mysql-menu-database {
+    color: rgb(204,204,204);
+    font-size: 12px;
+    font-weight: bold;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 15px;
+}
+
+.pomelo-mysql-menu-title {
+    background: rgb(56,56,56);
+    color: rgb(204,204,204);
+    font-size: 12px;
+    font-weight: bold;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 15px;
+}

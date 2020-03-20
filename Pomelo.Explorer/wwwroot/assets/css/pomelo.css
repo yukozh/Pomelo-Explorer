@@ -163,3 +163,8 @@ body {
     height: 32px;
     border-radius: 5px;
 }
+
+.pomelo-new-connection-menu-toggle {
+    line-height: 30px !important;
+    float: right;
+}
