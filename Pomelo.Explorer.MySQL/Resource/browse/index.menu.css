@@ -31,3 +31,7 @@
     .pomelo-mysql-menu-db-submenu-item i {
         width: 18px;
     }
+
+.pomelo-mysql-menu-database i {
+    width: 15px;
+}
