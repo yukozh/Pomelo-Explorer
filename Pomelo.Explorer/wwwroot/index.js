@@ -79,3 +79,21 @@ $(window).mousemove(function (e) {
 $(window).mouseup(function (e) {
     __split_down = false;
 });
+
+Vue.component('svg-icon', {
+    props: ['src'],
+    data: function () {
+        return {
+            inline: ''
+        };
+    },
+    created: function () {
+        var self = this;
+        fetch(self.src).then(data => {
+            return data.text();
+        }).then(txt => {
+            self.inline = txt;
+        });
+    },
+    template: '<svg v-html="inline"></svg>'
+});

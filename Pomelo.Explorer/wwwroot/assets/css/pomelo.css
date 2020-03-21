@@ -40,31 +40,19 @@ body {
     text-align: center;
     font-size: 24px;
     line-height: 50px;
-    color: rgb(133, 130, 128);
+    color: #fff;
+    fill: #fff;
     margin-bottom: 5px;
-    border-left: 5px solid rgba(0,0,0,0);
+    border-left: 3px solid rgba(0,0,0,0);
+    opacity: 0.6;
 }
 
-    .pomelo-instance-tab-item img {
-        opacity: 0.5;
-    }
-
-    .pomelo-instance-tab-item:hover {
-        color: #fff;
-    }
-
-    .pomelo-instance-tab-item:hover img {
+    .pomelo-instance-tab-item:hover, .pomelo-instance-tab-item.active {
         opacity: 1;
     }
 
     .pomelo-instance-tab-item.active {
-        color: #fff;
-        border-left: 3px solid #fff;
-    }
-
-    .pomelo-instance-tab-item.active img {
-        opacity: 1;
-        border-left: 3px solid #fff;
+        border-color: #fff;
     }
 
 .pomelo-instance-main {
@@ -96,12 +84,13 @@ body {
     display: block;
 }
 
-    .pomelo-new-connection-menu-item img {
+    .pomelo-new-connection-menu-item svg {
         width: 50px;
         height: 50px;
         float: left;
         border-radius: 5px;
         margin-right: 10px;
+        fill: #ccc;
     }
 
 .pomelo-new-connection-menu-item-provider {
@@ -175,6 +164,9 @@ body {
     width: 32px;
     height: 32px;
     border-radius: 5px;
+    fill: #fff;
+    stroke-width: 10;
+    stroke: #fff;
 }
 
 .pomelo-new-connection-menu-toggle {

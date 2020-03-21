@@ -3,12 +3,13 @@
     width: 600px;
 }
 
-.pomelo-mysql-create-header img {
+.pomelo-mysql-create-header svg {
     float: left;
     width: 100px;
     height: 100px;
     border-radius: 15px;
     margin-right: 30px;
+    fill: #d4d4d4;
 }
 
 .pomelo-mysql-create-header-title {
