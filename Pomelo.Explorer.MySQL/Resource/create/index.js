@@ -17,12 +17,15 @@ component.methods = {
     connect: function () {
         var self = this;
         self.working = true;
+        var id;
         qv.post('/mysql/createconnection', self.form)
             .then(function (data) {
                 app.pushInstance(data.id, 'mysql');
+                id = data.id;
                 return qv.post('/mysql/openconnection/' + data.id, { });
             })
             .then(function () {
+                app.redirectToInstance(id, 'mysql');
                 return Promise.resolve();
             })
             .catch(function (data) {

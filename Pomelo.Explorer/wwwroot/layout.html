@@ -1,9 +1,9 @@
 ﻿<div>
     <div class="pomelo-instance-tab">
-        <a v-on:click="$root.redirect('/create')" class="pomelo-instance-tab-item active" title="New Connection">
+        <a v-on:click="$root.redirect('/create')" class="pomelo-instance-tab-item" v-bind:class="{ 'active': $root.active === 'new-connection' }" title="New Connection">
             <i class="fa fa-link"></i>
         </a>
-        <a v-for="x in $root.tab.instances" v-on:click="$root.redirect('/static/' + x.provider + $root.extensions.filter(y => y.id === x.provider)[0].browse, { id: x.id })" class="pomelo-instance-tab-item">
+        <a v-for="x in $root.tab.instances" v-on:click="$root.redirectToInstance(x.id, x.provider)" v-bind:class="{ 'active': $root.active === 'instance-' + x.id }" class="pomelo-instance-tab-item">
             <svg-icon class="pomelo-instance-tab-icon" v-bind:src="'/static/' + x.provider + $root.extensions.filter(y => y.id === x.provider)[0].icon" />
         </a>
     </div>

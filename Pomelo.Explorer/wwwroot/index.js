@@ -1,6 +1,7 @@
 ﻿var app = new Vue({
     router: router,
     data: {
+        active: null,
         menu: false,
         tab: {
             instances:[]
@@ -13,6 +14,10 @@
     methods: {
         redirect: function (path, queries) {
             window.appBuilder.redirect(path, queries);
+        },
+        redirectToInstance: function (id, provider) {
+            this.active = 'instance-' + id;
+            this.redirect('/static/' + provider + this.extensions.filter(x => x.id === provider)[0].browse, { id: id });
         },
         getMain: function () {
             if (this._router.history.current.matched.length)
