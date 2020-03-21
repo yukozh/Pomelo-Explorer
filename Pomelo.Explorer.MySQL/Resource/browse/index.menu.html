@@ -1,11 +1,11 @@
 ﻿<div>
     <div class="pomelo-mysql-menu-title">Databases</div>
-    <template v-for="x in databases">
-        <div class="pomelo-mysql-menu-database">
+    <template v-for="(x, i) in databases">
+        <a class="pomelo-mysql-menu-database" v-on:click="$root.$set(toggled, i, !toggled[i])" v-bind:class="{ 'active': toggled[i] }">
             <i class="fa fa-database"></i> {{ x }}
-            <i class="pomelo-new-connection-menu-toggle fa" v-bind:class="{ 'fa-chevron-down': active == 'db', 'fa-chevron-right': active != 'db' }"></i>
-        </div>
-        <div class="pomelo-mysql-menu-db-submenu">
+            <i class="pomelo-new-connection-menu-toggle fa" v-bind:class="{ 'fa-chevron-down': toggled[i], 'fa-chevron-right': !toggled[i] }"></i>
+        </a>
+        <div class="pomelo-mysql-menu-db-submenu" v-show="!!toggled[i]">
             <a class="pomelo-mysql-menu-db-submenu-item">
                 <i class="fa fa-table"></i> Tables
             </a>

@@ -45,6 +45,7 @@ body {
     margin-bottom: 5px;
     border-left: 3px solid rgba(0,0,0,0);
     opacity: 0.6;
+    height: 50px;
 }
 
     .pomelo-instance-tab-item:hover, .pomelo-instance-tab-item.active {
@@ -167,6 +168,7 @@ body {
     fill: #fff;
     stroke-width: 10;
     stroke: #fff;
+    margin: 9px 6px 9px 9px;
 }
 
 .pomelo-new-connection-menu-toggle {

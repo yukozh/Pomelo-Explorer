@@ -5,7 +5,12 @@
     height: 30px;
     line-height: 30px;
     padding: 0 15px;
+    display: block;
 }
+
+    .pomelo-mysql-menu-database:hover, .pomelo-mysql-menu-database.active, .pomelo-mysql-menu-db-submenu-item:hover, .pomelo-mysql-menu-db-submenu-item.active {
+        background: rgb(56,56,56);
+    }
 
 .pomelo-mysql-menu-title {
     background: rgb(56,56,56);
