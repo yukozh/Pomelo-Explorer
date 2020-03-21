@@ -174,4 +174,5 @@ body {
 .pomelo-new-connection-menu-toggle {
     line-height: 30px !important;
     float: right;
+    text-align: center;
 }
