@@ -1,7 +1,26 @@
 ﻿<div>
     <div class="pomelo-mysql-menu-title">Databases</div>
-    <div v-for="x in databases" class="pomelo-mysql-menu-database">
-        <i class="fa fa-database"></i> {{ x }}
-        <i class="pomelo-new-connection-menu-toggle fa" v-bind:class="{ 'fa-chevron-down': active == 'db', 'fa-chevron-right': active != 'db' }"></i>
-    </div>
+    <template v-for="x in databases">
+        <div class="pomelo-mysql-menu-database">
+            <i class="fa fa-database"></i> {{ x }}
+            <i class="pomelo-new-connection-menu-toggle fa" v-bind:class="{ 'fa-chevron-down': active == 'db', 'fa-chevron-right': active != 'db' }"></i>
+        </div>
+        <div class="pomelo-mysql-menu-db-submenu">
+            <a class="pomelo-mysql-menu-db-submenu-item">
+                <i class="fa fa-table"></i> Tables
+            </a>
+            <a class="pomelo-mysql-menu-db-submenu-item">
+                <i class="fa fa-search"></i> Views
+            </a>
+            <a class="pomelo-mysql-menu-db-submenu-item">
+                <i class="fa fa-code"></i> Functions
+            </a>
+            <a class="pomelo-mysql-menu-db-submenu-item">
+                <i class="fa fa-terminal"></i> Query
+            </a>
+            <a class="pomelo-mysql-menu-db-submenu-item">
+                <i class="fa fa-files-o"></i> Backups
+            </a>
+        </div>
+    </template>
 </div>

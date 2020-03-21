@@ -8,11 +8,17 @@
 
 component.data = function () {
     return {
-        active: null,
+        active: {
+            db: null,
+            action: null,
+            detail: null
+        },
         instance: null,
-        databases: []
+        databases: [],
+        tables: {},
     };
 };
 
 component.methods = {
+    
 };
