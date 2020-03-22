@@ -1,3 +1,5 @@
-﻿component.created = function () {
+﻿component.menu = '/static/mysql/Resource/browse/index';
+
+component.created = function () {
 
 };

@@ -1,3 +1,5 @@
-﻿component.created = function () {
+﻿component.menu = '/create';
+
+component.created = function () {
     app.active = 'new-connection';
 };

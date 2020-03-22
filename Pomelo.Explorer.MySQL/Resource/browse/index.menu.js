@@ -1,10 +1,11 @@
 ﻿component.created = function () {
-    app.getMenu().instance = router.history.current.query.id;
-    qv.createView('/mysql/getdatabases/' + app.getMenu().instance)
+    var self = this;
+    self.instance = router.history.current.query.id;
+    qv.createView('/mysql/getdatabases/' + self.instance)
         .fetch((data) => {
-            app.getMenu().databases = data;
+            self.databases = data;
             for (var i = 0; i < data.length; ++i) {
-                app.getMenu().toggled.push(false);
+                self.toggled.push(false);
             }
         });
 };
@@ -20,7 +21,7 @@ component.data = function () {
 
 component.watch = {
     toggled: function () {
-        app.getMenu().$forceUpdate();
+        this.$forceUpdate();
     }
 };
 

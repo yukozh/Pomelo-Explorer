@@ -7,14 +7,14 @@
 
 component.methods = {
     getExtensionList: function () {
-        app.getMenu().extensions = qv.get('/extension/list', { creatable: false })
+        var self = this;
+        self.extensions = qv.get('/extension/list', { creatable: false })
             .then((data) => {
-                app.getMenu().extensions = data;
+                self.extensions = data;
             });
     }
 };
 
 component.created = function () {
-    var menu = app.getMenu();
-    menu.getExtensionList();
+    this.getExtensionList();
 };

@@ -9,7 +9,17 @@
         extensions:[]
     },
     created: function () {
-        this.getExtensions();
+        var self = this;
+        self.getExtensions();
+        appBuilder.onMenuHidden(function () {
+            self.menu = false;
+        });
+        appBuilder.onMenuShow(function () {
+            var menu = self.getMenu();
+            menu.$root = self;
+            menu.$parent = self;
+            self.menu = true;
+        });
     },
     methods: {
         redirect: function (path, queries) {
@@ -19,6 +29,9 @@
             this.active = 'instance-' + id;
             this.redirect('/static/' + provider + this.extensions.filter(x => x.id === provider)[0].browse, { id: id });
         },
+        useMenu: function (menu) {
+            appBuilder.loadMenu(menu);
+        },
         getMain: function () {
             if (this._router.history.current.matched.length)
                 return this._router.history.current.matched[0].instances.default;
@@ -26,11 +39,7 @@
                 return null;
         },
         getMenu: function () {
-            var matched = this._router.matcher.match(router.history.current.path + '.menu').matched;
-            if (matched.length)
-                return matched[0].instances.default;
-            else
-                return null;
+            return appBuilder.activeMenu;
         },
         dialog: function (icon, title, message) {
             qv.post('/dialog/show', { icon: icon, title: title, message: message });

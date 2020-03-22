@@ -1,4 +1,4 @@
-﻿menu('/create');
+﻿component.menu = '/create';
 
 component.data = function () {
     return {
