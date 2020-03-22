@@ -24,6 +24,11 @@
     margin: 15px;
 }
 
+    .pomelo-mysql-table-list tr.active {
+        color: #fff;
+        background: rgb(0,124,202);
+    }
+
 .pomelo-mysql-table-list td i {
     width: 15px;
 }
@@ -57,7 +62,7 @@
 
 .pomelo-mysql-tabbar-item .close {
     width: 15px;
-    margin-left: 5px;
+    text-align: right;
     visibility: hidden;
 }
 

@@ -1,6 +1,6 @@
 ﻿<div>
     <div class="pomelo-mysql-table-toolbar">
-        <a class="pomelo-mysql-table-toolbar-item" v-on:click="$root.open('table-view', { instance: instance, database: database, table: 'user' }, 'user')">
+        <a class="pomelo-mysql-table-toolbar-item" v-on:click="$root.open('table-view', { instance: instance, database: database, table: selected }, selected)">
             <i class="fa fa-folder-open-o"></i> Open
         </a>
         <a class="pomelo-mysql-table-toolbar-item">
@@ -25,7 +25,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(x, i) in tables">
+            <tr v-for="(x, i) in tables" v-on:click="selected = x.name" v-bind:class="{ 'active': selected === x.name }">
                 <td><i class="fa fa-table"></i> {{ x.name }}</td>
                 <td>{{ x.columns }}</td>
                 <td>{{ x.records }}</td>
