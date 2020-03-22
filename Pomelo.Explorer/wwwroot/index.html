@@ -16,16 +16,34 @@
     <script src="/assets/js/jquery.min.js"></script>
     <script src="/assets/js/i18n.js"></script>
     <script src="/assets/js/vue.js"></script>
-    <script src="/assets/js/vue-router.js"></script>
     <script src="/assets/js/vue-i18n.js"></script>
-    <script src="/assets/js/pomelo.vlazy.js"></script>
+    <script src="/assets/js/pomelo.container.js"></script>
     <script src="/assets/js/pomelo.queryview.js"></script>
     <script src="index.js"></script>
     <title>Pomelo</title>
+    <link id="component-css" rel="stylesheet" />
+    <link id="menu-css" rel="stylesheet" />
 </head>
 <body>
     <div id="app" v-cloak>
-        <render-layout></render-layout>
+        <div class="pomelo-instance-tab">
+            <a v-on:click="$root.openMenu('/menu-create');$root.open()" class="pomelo-instance-tab-item" v-bind:class="{ 'active': $root.active === 'new-connection' }" title="New Connection">
+                <i class="fa fa-link"></i>
+            </a>
+            <a v-for="x in $root.tab.instances" v-on:click="$root.openInstance(x.id, x.provider)" v-bind:class="{ 'active': $root.active === 'instance-' + x.id }" class="pomelo-instance-tab-item">
+                <svg-icon class="pomelo-instance-tab-icon" v-bind:src="'/static/' + x.provider + $root.extensions.filter(y => y.id === x.provider)[0].icon" />
+            </a>
+        </div>
+        <div class="pomelo-instance-menu" v-show="$root.menu">
+            <div id="menu"></div>
+            <div class="pomelo-instance-menu-drag"></div>
+        </div>
+        <div class="pomelo-instance-main">
+            <div id="main"></div>
+        </div>
+        <div class="pomelo-statusbar">
+
+        </div>
     </div>
     <script src="index.js"></script>
 </body>

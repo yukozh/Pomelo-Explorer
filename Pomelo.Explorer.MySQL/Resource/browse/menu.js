@@ -1,7 +1,6 @@
 ﻿component.created = function () {
     var self = this;
-    self.instance = router.history.current.query.id;
-    qv.createView('/mysql/getdatabases/' + self.instance)
+    qv.createView('/mysql/getdatabases/' + self.id)
         .fetch((data) => {
             self.databases = data;
             for (var i = 0; i < data.length; ++i) {
@@ -13,7 +12,7 @@
 component.data = function () {
     return {
         toggled: [],
-        instance: null,
+        id: null,
         databases: [],
         tables: {},
     };

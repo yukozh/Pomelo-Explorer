@@ -25,7 +25,7 @@ component.methods = {
                 return qv.post('/mysql/openconnection/' + data.id, { });
             })
             .then(function () {
-                app.redirectToInstance(id, 'mysql');
+                app.openInstance(id, 'mysql');
                 return Promise.resolve();
             })
             .catch(function (data) {
@@ -55,5 +55,5 @@ component.methods = {
 };
 
 component.created = function () {
-    app.getMenu().provider = 'mysql';
+    app.$menu.active.provider = 'mysql';
 };

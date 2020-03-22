@@ -3,7 +3,7 @@
     <a class="pomelo-new-connection-menu-item" 
        v-for="x in extensions" 
        v-bind:class="{ 'active': x.id == provider }"
-       v-on:click="function() { $root.redirect('/static/' + x.id + x.create) }">
+       v-on:click="$root.open('/static/' + x.id + x.create)">
         <svg-icon v-bind:src="'/static/' + x.id + x.icon" />
         <div>
             <div class="pomelo-new-connection-menu-item-provider">{{ x.title }}</div>

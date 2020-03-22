@@ -18,3 +18,7 @@ component.methods = {
 component.created = function () {
     this.getExtensionList();
 };
+
+component.active = function () {
+    app.active = 'new-connection';
+};

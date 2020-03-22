@@ -1,9 +1,7 @@
-﻿component.menu = '/static/mysql/Resource/browse/index';
+﻿component.menu = '/static/mysql/Resource/browse/menu';
 
 component.created = function () {
     console.log(this);
-    this.instance = router.history.current.query.instance;
-    this.database = router.history.current.query.database;
     this.getTables();
 };
 

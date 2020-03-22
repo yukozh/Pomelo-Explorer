@@ -1,5 +1,19 @@
-﻿var app = new Vue({
-    router: router,
+﻿var mainContainer = new PomeloComponentContainer('#main', app, function (view) {
+    $('#component-css').attr('href', view + '.css');
+}, function () { });
+
+var menuContainer = new PomeloComponentContainer('#menu', app, function (view) {
+    $('#menu-css').attr('href', view + '.css');
+    app.menu = true;
+}, function (view) {
+        if (!view) {
+            app.menu = false;
+        } else {
+            app.menu = true;
+        }
+});
+
+var app = new Vue({
     data: {
         active: null,
         menu: false,
@@ -11,23 +25,19 @@
     created: function () {
         var self = this;
         self.getExtensions();
-        appBuilder.onMenuHidden(function () {
-            self.menu = false;
-        });
-        appBuilder.onMenuShow(function () {
-            var menu = self.getMenu();
-            menu.$root = self;
-            menu.$parent = self;
-            self.menu = true;
-        });
     },
     methods: {
-        redirect: function (path, queries) {
-            window.appBuilder.redirect(path, queries);
+        open: function (view, params) {
+            app.$main.open(view, params);
         },
-        redirectToInstance: function (id, provider) {
+        openMenu: function (view, params) {
+            app.$menu.open(view, params);
+        },
+        openInstance: function (id, provider) {
             this.active = 'instance-' + id;
-            this.redirect('/static/' + provider + this.extensions.filter(x => x.id === provider)[0].browse, { id: id });
+            var view = '/static/' + provider + this.extensions.filter(x => x.id === provider)[0].browse;
+            app.$main.open();
+            app.$menu.open(view, { id: id });
         },
         useMenu: function (menu) {
             appBuilder.loadMenu(menu);
@@ -62,14 +72,11 @@
         }
     }
 });
+app.$main = mainContainer;
+app.$menu = menuContainer;
+app.$mount('#app');
 
 var __split_down = false;
-$.get('/layout.html', {}, function (template) {
-    Vue.component('render-layout', {
-        template: template
-    });
-    app.$mount('#app');
-});
 
 $(window).mousedown(function (e) {
     var dom = $(e.target);
