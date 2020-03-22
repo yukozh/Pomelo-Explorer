@@ -26,5 +26,4 @@ component.watch = {
 };
 
 component.methods = {
-    
 };

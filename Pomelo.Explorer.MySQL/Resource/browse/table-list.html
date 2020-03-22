@@ -1,0 +1,28 @@
+﻿<div>
+    <div class="pomelo-mysql-table-toolbar">
+        <a class="pomelo-mysql-table-toolbar-item">
+            <i class="fa fa-folder-open-o"></i> Open
+        </a>
+        <a class="pomelo-mysql-table-toolbar-item">
+            <i class="fa fa-pencil"></i> Design
+        </a>
+        <a class="pomelo-mysql-table-toolbar-item">
+            <i class="fa fa-plus-square-o"></i> New Table
+        </a>
+        <a class="pomelo-mysql-table-toolbar-item">
+            <i class="fa fa-trash-o"></i> Delete
+        </a>
+    </div>
+    <table class="pomelo-table pomelo-mysql-table-list">
+        <thead>
+            <tr>
+                <th>Table</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(x, i) in tables">
+                <td><i class="fa fa-table"></i> {{ x }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

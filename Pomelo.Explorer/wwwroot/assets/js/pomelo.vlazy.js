@@ -14,15 +14,6 @@ router.afterEach((to, from) => {
             current.$options.created[0].call(current);
         }
     }
-    if (to.matched.length) {
-        var menu = app._router.matcher.match(to.matched[0].path).matched;
-        if (menu.length > 0) {
-            var menuCom = menu[0].instances.default;
-            if (menuCom && menuCom.$options.created.length) {
-                menuCom.$options.created[0].call(current);
-            }
-        }
-    }
 });
 
 var appBuilder = {
@@ -117,7 +108,7 @@ var appBuilder = {
         var origin = component.created;
         component.created = function () {
             // Others
-            origin();
+            origin.call(this);
             func.call(this);
         };
     },
@@ -129,13 +120,11 @@ var appBuilder = {
         html = await this.getTemplate(url);
         js = await this.getScript(url);
         var component = this.buildComponent(html, js, menu);
+        if ($('#component-css').length === 0) {
+            $('head').append(`<link id="component-css" rel="stylesheet" />`);
+        }
         this.buildCreatedFunction(component, function () {
-            if ($('#component-css').length === 0) {
-                $('head').append(`<link id="component-css" href="${(url + '.css')}" rel="stylesheet" />`);
-            } else {
-                $('#component-css').attr('href', url + '.css');
-            }
-
+            $('#component-css').attr('href', url + '.css');
             self.loadMenu(component.menu);
         });
         this.addRoute(url, component);

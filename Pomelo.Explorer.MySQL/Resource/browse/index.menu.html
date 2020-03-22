@@ -6,7 +6,7 @@
             <i class="pomelo-new-connection-menu-toggle fa" v-bind:class="{ 'fa-chevron-down': toggled[i], 'fa-chevron-right': !toggled[i] }"></i>
         </a>
         <div class="pomelo-mysql-menu-db-submenu" v-show="!!toggled[i]">
-            <a class="pomelo-mysql-menu-db-submenu-item">
+            <a class="pomelo-mysql-menu-db-submenu-item" v-on:click="$root.redirect('/static/mysql/Resource/browse/table-list', { instance: instance, database: x })">
                 <i class="fa fa-table"></i> Tables
             </a>
             <a class="pomelo-mysql-menu-db-submenu-item">

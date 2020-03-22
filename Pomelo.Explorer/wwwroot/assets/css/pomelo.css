@@ -176,3 +176,26 @@ body {
     float: right;
     text-align: center;
 }
+
+.pomelo-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.pomelo-table th {
+    text-align: left;
+}
+
+    .pomelo-table td,
+    .pomelo-table th {
+        padding: 8px 10px;
+    }
+
+    .pomelo-table tr {
+        border-bottom: 1px solid #444;
+    }
+
+        .pomelo-table tr:hover {
+            background: rgb(42,45,46);
+        }

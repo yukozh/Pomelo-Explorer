@@ -87,5 +87,24 @@ namespace Pomelo.Explorer.MySQL.Controllers
                 return Json(result); 
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTables(string id, string database)
+        {
+            var conn = ConnectionHelper.Connections[id];
+            using (var command = new MySqlCommand($"SHOW TABLES IN `{database}`;", ConnectionHelper.Connections[id]))
+            {
+                await conn.EnsureOpenedAsync();
+                var result = new List<string>();
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        result.Add(reader[0].ToString());
+                    }
+                }
+                return Json(result);
+            }
+        }
     }
 }
