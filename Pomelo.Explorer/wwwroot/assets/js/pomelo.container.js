@@ -49,18 +49,27 @@ var PomeloComponentContainer = function (el, root, onActive, onViewOpen) {
                     $(el).append('<div id="vm-' + random + '"></div>');
                     vm.$root = root;
                     vm.$parent = root;
+                    if (vm.active) {
+                        var p = vm.active();
+                        if (p instanceof Promise) {
+                            await p;
+                        }
+                    }
                     vm.$mount('#vm-' + random);
                     vm.$identity = qs;
                     vm.$pomelo = this;
                 } else {
+                    if (this.instance[qs].active) {
+                        var p = this.instance[qs].active();
+                        if (p instanceof Promise) {
+                            await p;
+                        }
+                    }
                     this.instance[qs].$el.hidden = false;
                 }
 
                 if (this.instance[qs]) {
                     this.active = this.instance[qs];
-                    if (this.active.active) {
-                        this.active.active();
-                    }
                 }
             }
 
@@ -119,7 +128,7 @@ var PomeloComponentContainer = function (el, root, onActive, onViewOpen) {
             component.active = function () {
                 origin.call(this);
                 if (func) {
-                    func.call(this, view, component);
+                    return func.call(this, view, component);
                 }
             };
         },

@@ -1,10 +1,22 @@
 ﻿var mainContainer = new PomeloComponentContainer('#main', app, function (view) {
-    $('#component-css').attr('href', view + '.css');
+    return fetch(view + '.css')
+        .then(data => {
+            return data.text();
+        })
+        .then(data => {
+            $('#component-css').html(data);
+        });
 }, function () { });
 
 var menuContainer = new PomeloComponentContainer('#menu', app, function (view) {
-    $('#menu-css').attr('href', view + '.css');
-    app.menu = true;
+    return fetch(view + '.css')
+        .then(data => {
+            return data.text();
+        })
+        .then(data => {
+            $('#menu-css').html(data);
+            app.menu = true;
+        });
 }, function (view) {
         if (!view) {
             app.menu = false;
