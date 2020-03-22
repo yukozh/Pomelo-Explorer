@@ -38,6 +38,7 @@
     line-height: 40px;
     font-size: 12px;
     display: inline-block;
+    margin-right: -5px;
 }
 
     .pomelo-mysql-tabbar-item.active {
