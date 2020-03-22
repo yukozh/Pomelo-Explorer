@@ -1,6 +1,11 @@
-﻿var router = new VueRouter({
+﻿String.prototype.replaceAll = function (s1, s2) {
+    return this.replace(new RegExp(s1, "gm"), s2);
+};
+
+var router = new VueRouter({
     mode: 'history'
 });
+
 router.afterEach((to, from) => {
     $(window).scrollTop(0);
     if (to.matched.length && to.matched[0].instances.default) {
@@ -9,19 +14,67 @@ router.afterEach((to, from) => {
             current.$options.created[0].call(current);
         }
     }
-    if (to.matched.length) {
-        var menu = app._router.matcher.match(to.matched[0].path).matched;
-        if (menu.length > 0) {
-            var menuCom = menu[0].instances.default;
-            if (menuCom && menuCom.$options.created.length) {
-                menuCom.$options.created[0].call(current);
-            }
-        }
-    }
 });
 
 var appBuilder = {
     router: router,
+    menuContainer: {},
+    activeMenu: null,
+    menuHiddenFunc: null,
+    menuShowFunc: null,
+    loadMenu: async function (menu) {
+        var destroy = function () {
+            if (this.activeMenu) {
+                this.activeMenu.$destroy();
+                this.activeMenu = null;
+                if (this.menuHiddenFunc) {
+                    this.menuHiddenFunc();
+                }
+            }
+            return;
+        };
+
+        if (!menu) {
+            destroy();
+        }
+
+        var name = 'menu' + menu.replaceAll('\/', '-').replaceAll('\\.', '-');
+        if (this.activeMenu && name === this.activeMenu.$options.name) {
+            return;
+        } else {
+            var html = await this.getTemplate(menu + '.menu');
+            if (!html) {
+                return this.loadMenu(null);
+            }
+            var js = await this.getScript(menu + '.menu');
+
+            if ($('#menu-css').length === 0) {
+                $('head').append(`<link id="component-css" href="${(menu + '.menu.css')}" rel="stylesheet" />`);
+            } else {
+                $('#menu-css').attr('href', url + '.menu.css');
+            }
+
+            var component = { template: html };
+            eval(js);
+            var ComponentBuilder = Vue.component('menu' + menu.replaceAll('\/', '-').replaceAll('\\.', '-'), component);
+            var instance = new ComponentBuilder();
+            instance.$root = app;
+            destroy();
+            this.activeMenu = instance;
+
+            $('#menu').html('<div id="menu-anchor"></div>');
+            this.activeMenu.$mount('#menu-anchor');
+            if (this.menuShowFunc) {
+                this.menuShowFunc();
+            }
+        }
+    },
+    onMenuShow: function (func) {
+        this.menuShowFunc = func;
+    },
+    onMenuHidden: function (func) {
+        this.menuHiddenFunc = func;
+    },
     getTemplate: function (url) {
         return fetch(url + '.html')
             .then((data) => { return data.text() })
@@ -37,15 +90,9 @@ var appBuilder = {
             .then((data) => { return data.text() })
             .catch((err) => { return Promise.resolve('') });
     },
-    buildComponent: async function (template, script, menuFunc) {
+    buildComponent: function (template, script) {
         var component = { template: template };
-        var promise;
-        var menu = (url) => {
-            promise =  menuFunc(url);
-        };
         eval(script);
-        await promise;
-        console.log(component);
         return component;
     },
     addRoute: function (url, component) {
@@ -61,67 +108,29 @@ var appBuilder = {
         var origin = component.created;
         component.created = function () {
             // Others
-            origin();
+            origin.call(this);
             func.call(this);
         };
     },
-    loadComponentIfNotExist: async function (url, isMenu) {
+    loadComponentIfNotExist: async function (url) {
         if (this.router.apps.some(x => x._route.path === url))
             return;
 
         var self = this;
-        var menu = async function (menuUrl) {
-            var menuHtml = await self.getTemplate(menuUrl + '.menu');
-            var menuJs = await self.getScript(menuUrl + '.menu');
-            var menuCss = await self.getCss(menuUrl + '.menu');
-            var menuComponent = await self.buildComponent(menuHtml, menuJs, menu);
-            self.buildCreatedFunction(menuComponent, function () {
-                this.$root.menu = true;
-            });
-            self.addMenuRoute(url, menuComponent);
-        };
-
-        if (!isMenu) {
-            html = await this.getTemplate(url);
-            js = await this.getScript(url);
-            var component = await this.buildComponent(html, js, menu);
-            this.buildCreatedFunction(component, function () {
-                if ($('#component-css').length === 0) {
-                    $('head').append(`<link id="component-css" href="${(url + '.css')}" rel="stylesheet" />`);
-                } else {
-                    $('#component-css').attr('href', url + '.css');
-                }
-
-                if ($('#menu-css').length === 0) {
-                    $('head').append(`<link id="menu-css" href="${(url + '.menu.css')}" rel="stylesheet" />`);
-                } else {
-                    $('#menu-css').attr('href', url + '.menu.css');
-                }
-            });
-            this.addRoute(url, component);
-        } else {
-            html = await this.getTemplate(url + '.menu');
-            var nomenu = false;
-            if (!html) {
-                nomenu = true;
-                html = '<div data-no-menu></div>';
-            }
-            js = await this.getScript(url + '.menu');
-            if (!js) {
-                js = 'component.created = function () { this.$root.menu = false; }';
-            }
-            var component = await this.buildComponent(html, js, menu);
-            if (!nomenu) {
-                this.buildCreatedFunction(component, function () {
-                    this.$root.menu = true;
-                });
-            }
-            this.addMenuRoute(url, component);
+        html = await this.getTemplate(url);
+        js = await this.getScript(url);
+        var component = this.buildComponent(html, js, menu);
+        if ($('#component-css').length === 0) {
+            $('head').append(`<link id="component-css" rel="stylesheet" />`);
         }
+        this.buildCreatedFunction(component, function () {
+            $('#component-css').attr('href', url + '.css');
+            self.loadMenu(component.menu);
+        });
+        this.addRoute(url, component);
     },
-    redirect: async function (path, params) {
-        await this.loadComponentIfNotExist(path, false);
-        await this.loadComponentIfNotExist(path, true);
-        this.router.push({ path: path, params: params });
+    redirect: async function (path, queries) {
+        await this.loadComponentIfNotExist(path);
+        this.router.push({ path: path, query: queries });
     }
 };

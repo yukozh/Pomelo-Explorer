@@ -1,0 +1,29 @@
+﻿.pomelo-mysql-table-toolbar {
+    background: rgb(42,45,46);
+    line-height: 40px;
+    padding: 0 15px;
+    border-bottom: 1px solid #444;
+}
+
+.pomelo-mysql-table-toolbar-item {
+    display: inline-block;
+    padding: 0 10px;
+    font-size: 12px;
+}
+
+    .pomelo-mysql-table-toolbar-item:hover {
+        background: rgb(70, 70, 70);
+        color: #fff;
+    }
+
+    .pomelo-mysql-table-toolbar-item i {
+        width: 15px;
+    }
+
+.pomelo-mysql-table-list {
+    margin: 15px;
+}
+
+.pomelo-mysql-table-list td i {
+    width: 15px;
+}
