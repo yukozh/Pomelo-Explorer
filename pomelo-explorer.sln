@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomelo.Explorer", "Pomelo.E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomelo.Explorer.MySQL", "Pomelo.Explorer.MySQL\Pomelo.Explorer.MySQL.csproj", "{34DA624B-10A5-4C94-B8E9-A361D5B75AF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pomelo.Explorer.Definitions", "Pomelo.Explorer.Definitions\Pomelo.Explorer.Definitions.csproj", "{1C689519-ECDB-4E20-9F34-A3A7853FF3C2}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{34DA624B-10A5-4C94-B8E9-A361D5B75AF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34DA624B-10A5-4C94-B8E9-A361D5B75AF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34DA624B-10A5-4C94-B8E9-A361D5B75AF2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1C689519-ECDB-4E20-9F34-A3A7853FF3C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1C689519-ECDB-4E20-9F34-A3A7853FF3C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1C689519-ECDB-4E20-9F34-A3A7853FF3C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1C689519-ECDB-4E20-9F34-A3A7853FF3C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

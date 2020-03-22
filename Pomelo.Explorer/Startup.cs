@@ -2,7 +2,6 @@
 using System.Resources;
 using System.Linq;
 using System.IO;
-using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -27,11 +26,7 @@ namespace Pomelo.Explorer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                options.JsonSerializerOptions.IgnoreNullValues = true;
-            });
+            services.AddMvc();
             services.AddSingleton<IActionDescriptorChangeProvider>(PomeloActionDescriptorChangeProvider.Instance);
             services.AddSingleton(PomeloActionDescriptorChangeProvider.Instance);
         }
@@ -39,7 +34,14 @@ namespace Pomelo.Explorer
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseDeveloperExceptionPage();
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+            }
 
             app.UseStaticFiles();
             app.UseExtensionStaticResourceMiddleware();
@@ -98,6 +100,7 @@ namespace Pomelo.Explorer
                 Show = true,
                 DarkTheme = true
             }, $"http://localhost:{BridgeSettings.WebPort}/index.html");
+            //browserWindow.OnReadyToShow += () => browserWindow.Show();
             browserWindow.SetTitle("Pomelo Explorer");
         }
     }

@@ -7,18 +7,14 @@
 
 component.methods = {
     getExtensionList: function () {
-        var self = this;
-        self.extensions = qv.get('/extension/list', { creatable: false })
+        app.getMenu().extensions = qv.get('/extension/list', { creatable: false })
             .then((data) => {
-                self.extensions = data;
+                app.getMenu().extensions = data;
             });
     }
 };
 
 component.created = function () {
-    this.getExtensionList();
-};
-
-component.active = function () {
-    app.active = 'new-connection';
+    var menu = app.getMenu();
+    menu.getExtensionList();
 };

@@ -18,9 +18,5 @@ namespace Pomelo.Explorer
         public string Title { get; set; }
 
         public string Description { get; set; }
-
-        public string Browse { get; set; }
-
-        public bool Singleton { get; set; }
     }
 }
