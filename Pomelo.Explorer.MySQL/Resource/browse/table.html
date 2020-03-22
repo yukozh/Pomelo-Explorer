@@ -1,0 +1,13 @@
+﻿<div>
+    <div class="pomelo-mysql-tabbar">
+        <a class="pomelo-mysql-tabbar-item major" v-on:click="openList()">
+            Tables
+        </a>
+        <a class="pomelo-mysql-tabbar-item" v-for="x in opened" v-on:click="open(x.type, x.params, x.title)">
+            <i class="fa fa-table"></i> {{ x.title }}
+            <i class="close fa fa-close"></i>
+        </a>
+    </div>
+    <div v-bind:id="'pomelo-mysql-table-' + instance + '-' + database">
+    </div>
+</div>
