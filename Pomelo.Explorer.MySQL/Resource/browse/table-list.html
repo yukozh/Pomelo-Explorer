@@ -26,12 +26,12 @@
         </thead>
         <tbody>
             <tr v-for="(x, i) in tables">
-                <td><i class="fa fa-table"></i> {{ x }}</td>
-                <td>-</td>
-                <td>0</td>
-                <td>InnoDB</td>
-                <td>utf8mb4</td>
-                <td>utf8mb4_general_ci</td>
+                <td><i class="fa fa-table"></i> {{ x.name }}</td>
+                <td>{{ x.columns }}</td>
+                <td>{{ x.records }}</td>
+                <td>{{ x.engine }}</td>
+                <td>{{ x.charset }}</td>
+                <td>{{ x.collate }}</td>
             </tr>
         </tbody>
     </table>

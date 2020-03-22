@@ -95,12 +95,20 @@ namespace Pomelo.Explorer.MySQL.Controllers
             using (var command = new MySqlCommand($"SHOW TABLES IN `{database}`;", ConnectionHelper.Connections[id]))
             {
                 await conn.EnsureOpenedAsync();
-                var result = new List<string>();
+                var result = new List<TableInfo>();
                 using (var reader = await command.ExecuteReaderAsync())
                 {
                     while (await reader.ReadAsync())
                     {
-                        result.Add(reader[0].ToString());
+                        result.Add(new TableInfo 
+                        {
+                            Name = reader[0].ToString(),
+                            Charset = "utf8mb4",
+                            Collate = "utf8mb4_general-ci",
+                            Columns = 0,
+                            Records = 0,
+                            Engine = "InnoDB"
+                        });
                     }
                 }
                 return Json(result);
