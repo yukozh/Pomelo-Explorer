@@ -6,10 +6,12 @@ namespace Pomelo.Explorer.Definitions
 {
     public class ViewTableRowsRequest
     {
-        public string Instance { get; set; }
+        public string Database { get; set; } = null;
 
-        public string Database { get; set; }
+        public string Table { get; set; } = null;
 
-        public string Table { get; set; }
+        public ConditionExpression Expression { get; set; } = null;
+
+        public int Page { get; set; } = 0;
     }
 }

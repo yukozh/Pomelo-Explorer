@@ -194,6 +194,7 @@ a {
     .pomelo-table td,
     .pomelo-table th {
         padding: 8px 10px;
+        white-space: nowrap;
     }
 
     .pomelo-table tr {

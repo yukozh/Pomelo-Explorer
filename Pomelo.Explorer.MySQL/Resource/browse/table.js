@@ -24,10 +24,9 @@ component.methods = {
         var url = '/static/mysql/Resource/browse/' + type;
         var id = this.$cont.toQueryString(url, params);
         if (this.opened.filter(x => x.id === id).length === 0) {
-            console.warn(id);
             this.opened.push({ id: id, title: title, params: params, type: type });
         }
         this.active = id;
-        this.$cont.open(url, { instance: this.instance, database: this.database });
+        this.$cont.open(url, params);
     }
 };

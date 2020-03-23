@@ -114,5 +114,47 @@ namespace Pomelo.Explorer.MySQL.Controllers
                 return Json(result);
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> GetTableRows([FromRoute]string id, [FromBody]ViewTableRowsRequest request)
+        {
+            const int pageSize = 1000;
+            var condition = "";
+            if (request.Expression != null)
+            {
+                condition = "WHERE " + MySqlConditionExpressionTranslator.GenerateSql(request.Expression);
+            }
+            var sql = $"SELECT * FROM `{request.Database}`.`{request.Table}` {condition} LIMIT {pageSize} OFFSET {request.Page * pageSize}";
+
+            var conn = ConnectionHelper.Connections[id];
+            using (var command = new MySqlCommand(sql, ConnectionHelper.Connections[id]))
+            {
+                await conn.EnsureOpenedAsync();
+                var result = new List<List<string>>();
+                var columns = new List<string>();
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    for (var i = 0; i < reader.FieldCount; ++i)
+                    {
+                        columns.Add(reader.GetName(i));
+                    }
+
+                    while (await reader.ReadAsync())
+                    {
+                        var row = new List<string>();
+                        for (var i = 0; i < reader.FieldCount; ++i)
+                        {
+                            row.Add(reader[i].ToString());
+                        }
+                        result.Add(row);
+                    }
+                }
+                return Json(new TableResponse
+                { 
+                    Columns = columns,
+                    Values = result
+                });
+            }
+        }
     }
 }

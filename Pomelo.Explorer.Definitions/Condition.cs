@@ -2,9 +2,11 @@
 {
     public enum Condition
     {
+        And,
+        Or,
         Equal,
         NotEqual,
-        Contains,
+        Like,
         GreaterThan,
         GreaterThanOrEqual,
         LowerThan,

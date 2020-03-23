@@ -4,15 +4,15 @@
             <i class="fa fa-plus"></i> New Record
         </a>
     </div>
-    <table class="pomelo-table pomelo-mysql-table-list">
+    <table class="pomelo-table">
         <thead>
             <tr>
-                <th>Id</th>
+                <th v-for="x in columns">{{ x }}</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>1</td>
+            <tr v-for="x in rows">
+                <td v-for="y in x">{{ y }}</td>
             </tr>
         </tbody>
     </table>

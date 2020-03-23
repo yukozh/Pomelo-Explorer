@@ -26,13 +26,11 @@ var PomeloComponentContainer = function (el, root, onActive, onViewOpen) {
             return 'pomelo' + name.replaceAll('\/', '-').replaceAll('\\.', '-');
         },
         toQueryString: function (view, params) {
-            var str = view;
-            var hasParam = false;
+            var str = view + "?";
             for (var x in params) {
-                hasParam = true;
                 str += `${x}=${params[x]}&`;
             }
-            return hasParam ? str.substr(0, str.length - 1) : str;
+            return str.substr(0, str.length - 1);
         },
         open: async function (view, params) {
             if (this.active) {
