@@ -11,6 +11,7 @@ component.data = function () {
         database: null,
         table: null,
         rows: [],
+        origin:[],
         columns: [],
         page: 0
     };
@@ -40,6 +41,7 @@ component.methods = {
             .then(data => {
                 self.columns = data.columns;
                 self.rows = data.values;
+                self.origin = JSON.parse(JSON.stringify(data.values));
             });
     },
     getWindowHeight: function () {
@@ -50,6 +52,13 @@ component.methods = {
             return (getWindowHeight() - this.$refs.toolbar.offsetHeight - this.$root.$refs.tabbar.offsetHeight - 25).toString() + 'px';
         } catch (ex) {
             return null;
+        }
+    },
+    handleDirty: function (e) {
+        if (e.target.value === $(e.target).attr('data-origin')) {
+            $(e.target).removeClass('dirty');
+        } else {
+            $(e.target).addClass('dirty');
         }
     }
 };

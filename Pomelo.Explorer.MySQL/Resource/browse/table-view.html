@@ -1,19 +1,30 @@
 ﻿<div>
     <div class="pomelo-mysql-table-toolbar" ref="toolbar">
         <a class="pomelo-mysql-table-toolbar-item">
-            <i class="fa fa-plus"></i> New Record
+            <i class="fa fa-save"></i> Save
+        </a>
+        <a class="pomelo-mysql-table-toolbar-item">
+            <i class="fa fa-rotate-left"></i> Discard
+        </a>
+        <a class="pomelo-mysql-table-toolbar-item">
+            <i class="fa fa-plus"></i> New
+        </a>
+        <a class="pomelo-mysql-table-toolbar-item">
+            <i class="fa fa-minus"></i> Remove
         </a>
     </div>
     <div class="pomelo-table-outer" v-bind:style="{ 'height': tableHeight }">
-        <table class="pomelo-table">
+        <table class="pomelo-table hover-display-border">
             <thead>
                 <tr>
                     <th v-for="x in columns">{{ x }}</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="x in rows">
-                    <td v-for="y in x">{{ y }}</td>
+                <tr v-for="(x, i) in rows">
+                    <td v-for="(y, j) in x">
+                        <input type="text" class="pomelo-table-textbox" v-bind:data-origin="y" v-bind:value="y" v-on:blur="handleDirty($event)" />
+                    </td>
                 </tr>
             </tbody>
         </table>
