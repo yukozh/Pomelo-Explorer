@@ -32,7 +32,8 @@ var app = new Vue({
         tab: {
             instances:[]
         },
-        extensions:[]
+        extensions: [],
+        height: 0
     },
     created: function () {
         var self = this;
@@ -82,8 +83,14 @@ var app = new Vue({
                     self.extensions = data;
                 });
         }
+    },
+    mounted: function () {
+        this.$nextTick(() => {
+            window.addEventListener('resize', () => { this.height = window.innerHeight; });
+        });
     }
 });
+
 app.$main = mainContainer;
 app.$menu = menuContainer;
 app.$mount('#app');

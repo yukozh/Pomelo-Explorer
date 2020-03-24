@@ -1,19 +1,21 @@
 ﻿<div>
-    <div class="pomelo-mysql-table-toolbar">
+    <div class="pomelo-mysql-table-toolbar" ref="toolbar">
         <a class="pomelo-mysql-table-toolbar-item">
             <i class="fa fa-plus"></i> New Record
         </a>
     </div>
-    <table class="pomelo-table">
-        <thead>
-            <tr>
-                <th v-for="x in columns">{{ x }}</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="x in rows">
-                <td v-for="y in x">{{ y }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="pomelo-table-outer" v-bind:style="{ 'height': tableHeight }">
+        <table class="pomelo-table">
+            <thead>
+                <tr>
+                    <th v-for="x in columns">{{ x }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="x in rows">
+                    <td v-for="y in x">{{ y }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>

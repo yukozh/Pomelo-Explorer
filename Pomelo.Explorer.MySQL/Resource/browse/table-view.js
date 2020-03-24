@@ -16,6 +16,23 @@ component.data = function () {
     };
 };
 
+component.computed = {
+    tableHeight: function () {
+        try {
+            return (this.$root.$root.height - this.toolbarHeight - this.$root.tabbarHeight - 25) + 'px';
+        } catch {
+            return 0;
+        }
+    },
+    toolbarHeight: function () {
+        if (this.$refs.toolbar) {
+            return this.$refs.toolbar.offsetHeight;
+        } else {
+            return 42;
+        }
+    }
+};
+
 component.methods = {
     getTable: function (params) {
         var self = this;
@@ -24,5 +41,15 @@ component.methods = {
                 self.columns = data.columns;
                 self.rows = data.values;
             });
+    },
+    getWindowHeight: function () {
+        $(window).height();
+    },
+    getTableHeight: function () {
+        try {
+            return (getWindowHeight() - this.$refs.toolbar.offsetHeight - this.$root.$refs.tabbar.offsetHeight - 25).toString() + 'px';
+        } catch (ex) {
+            return null;
+        }
     }
 };

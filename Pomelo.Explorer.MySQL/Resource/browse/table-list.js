@@ -16,6 +16,23 @@ component.data = function () {
     };
 };
 
+component.computed = {
+    tableHeight: function () {
+        try {
+            return (this.$root.$root.height - this.toolbarHeight - this.$root.tabbarHeight - 25) + 'px';
+        } catch {
+            return 0;
+        }
+    },
+    toolbarHeight: function () {
+        if (this.$refs.toolbar) {
+            return this.$refs.toolbar.offsetHeight;
+        } else {
+            return 42;
+        }
+    }
+};
+
 component.methods = {
     getTables: function () {
         var self = this;

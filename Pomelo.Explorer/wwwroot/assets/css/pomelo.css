@@ -52,7 +52,8 @@ a {
     height: 50px;
 }
 
-    .pomelo-instance-tab-item:hover, .pomelo-instance-tab-item.active {
+    .pomelo-instance-tab-item:hover, 
+    .pomelo-instance-tab-item.active {
         opacity: 1;
     }
 
@@ -107,7 +108,8 @@ a {
     font-size: 10px;
 }
 
-.pomelo-new-connection-menu-item:hover, .pomelo-new-connection-menu-item.active {
+.pomelo-new-connection-menu-item:hover, 
+.pomelo-new-connection-menu-item.active {
     background: rgb(42,45,46);
 }
 
@@ -204,3 +206,22 @@ a {
         .pomelo-table tr:hover {
             background: rgb(42,45,46);
         }
+
+.pomelo-table-outer {
+    overflow: auto;
+}
+
+::-webkit-scrollbar {
+    background: rgb(30,30,30);
+    border: 1px solid rgb(50,50,50);
+    height: 18px;
+    width: 18px;
+}
+
+::-webkit-scrollbar-corner {
+    background: rgb(30,30,30);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(79,79,79);
+}

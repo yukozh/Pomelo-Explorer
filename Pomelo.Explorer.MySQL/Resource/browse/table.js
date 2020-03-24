@@ -15,6 +15,12 @@ component.data = function () {
     };
 };
 
+component.computed = {
+    tabbarHeight: function () {
+        return this.$refs.tabbar.offsetHeight;
+    }
+};
+
 component.methods = {
     openList: function () {
         this.active = null;
@@ -28,5 +34,5 @@ component.methods = {
         }
         this.active = id;
         this.$cont.open(url, params);
-    }
+    },
 };
