@@ -38,6 +38,7 @@ var app = new Vue({
     created: function () {
         var self = this;
         self.getExtensions();
+        self.height = window.innerHeight;
     },
     methods: {
         open: function (view, params) {
