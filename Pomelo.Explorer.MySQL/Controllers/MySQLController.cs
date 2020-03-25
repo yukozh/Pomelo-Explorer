@@ -156,5 +156,32 @@ namespace Pomelo.Explorer.MySQL.Controllers
                 });
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> GetTableColumns([FromRoute]string id, [FromBody]GetTableColumnsRequest request)
+        {
+            var conn = ConnectionHelper.Connections[id];
+            using (var command = new MySqlCommand($"SHOW COLUMNS IN `{request.Database}`.`{request.Table}`;", ConnectionHelper.Connections[id]))
+            {
+                await conn.EnsureOpenedAsync();
+                var result = new List<MySQLTableColumn>();
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        result.Add(new MySQLTableColumn
+                        {
+                            Field = reader[0].ToString(),
+                            Type = reader[1].ToString(),
+                            Null = reader[2].ToString(),
+                            Key = reader[3].ToString(),
+                            Default = DBNull.Value == reader[4] ? null : reader[4].ToString(),
+                            Extra = reader[5].ToString()
+                        });
+                    }
+                }
+                return Json(result);
+            }
+        }
     }
 }
