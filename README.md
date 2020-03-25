@@ -5,3 +5,5 @@ Pomelo Explorer is an open source browser, and enables every developers are able
 ![image](https://user-images.githubusercontent.com/2216750/77243217-9c0d9a80-6c42-11ea-93f8-96e4b80b18f6.png)
 
 ![image](https://user-images.githubusercontent.com/2216750/77243195-6d8fbf80-6c42-11ea-8294-4472ed567869.png)
+
+![image](https://user-images.githubusercontent.com/2216750/77423663-b1cdbc00-6e0a-11ea-9a6f-fd97a2b04758.png)
