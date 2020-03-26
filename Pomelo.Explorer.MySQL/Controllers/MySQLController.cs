@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
+using System.Text.Json;
+using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 using Pomelo.Explorer.Definitions;
@@ -181,6 +184,28 @@ namespace Pomelo.Explorer.MySQL.Controllers
                     }
                 }
                 return Json(result);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ExecuteNonQuery([FromRoute]string id, [FromBody]ExecuteSqlRequest request)
+        {
+            var conn = ConnectionHelper.Connections[id];
+            using (var command = new MySqlCommand(request.Sql, ConnectionHelper.Connections[id]))
+            {
+                command.CommandText = $"USE `{request.Database}`; \r\n" + command.CommandText;
+                if (request.Parameters != null)
+                {
+                    for (var i = 0; i < request.Parameters.Length; ++i)
+                    {
+                        var converter = MySqlTypeMapper.Map[MySqlDbTypeParser.Parse(request.DbTypes[i].ToString()).Type];
+                        var value = request.Parameters[i];
+                        var param = new MySqlParameter(request.Placeholders[i], converter(value));
+                        command.Parameters.Add(param);
+                    }
+                }
+                await conn.EnsureOpenedAsync();
+                return Json(await command.ExecuteNonQueryAsync());
             }
         }
     }

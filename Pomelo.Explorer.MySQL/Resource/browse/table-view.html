@@ -1,6 +1,6 @@
 ﻿<div>
     <div class="pomelo-mysql-table-toolbar" ref="toolbar">
-        <a class="pomelo-mysql-table-toolbar-item">
+        <a v-on:click="save" class="pomelo-mysql-table-toolbar-item">
             <i class="fa fa-save"></i> Save
         </a>
         <a class="pomelo-mysql-table-toolbar-item">
@@ -17,11 +17,11 @@
         <table class="pomelo-table hover-display-border">
             <thead>
                 <tr>
-                    <th v-for="x in columns">{{ x }}</th>
+                    <th v-for="x in columns">{{ x.field }}</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(x, i) in rows">
+                <tr v-for="(x, i) in rows" v-bind:data-row-index="i">
                     <td v-for="(y, j) in x">
                         <input type="text" class="pomelo-table-textbox" v-bind:data-origin="y" v-bind:value="y" v-on:blur="handleDirty($event)" />
                     </td>

@@ -11,7 +11,8 @@ component.data = function () {
         database: null,
         table: null,
         rows: [],
-        origin:[],
+        status: [],
+        origin: [],
         columns: [],
         page: 0
     };
@@ -35,11 +36,22 @@ component.computed = {
 };
 
 component.methods = {
+    save: function () {
+        var request = this.generateSql();
+        qv.post('/mysql/executenonquery/' + this.instance, request)
+            .then(data => {
+                // TODO: Update status bar, clean dirty
+                alert('OK');
+            });
+    },
     getTable: function (params) {
         var self = this;
-        qv.post('/mysql/gettablerows/' + self.instance, params)
+        qv.post('/mysql/gettablecolumns/' + self.instance, params)
             .then(data => {
-                self.columns = data.columns;
+                self.columns = data;
+                return qv.post('/mysql/gettablerows/' + self.instance, params);
+            })
+            .then(data => {
                 self.rows = data.values;
                 self.origin = JSON.parse(JSON.stringify(data.values));
             });
@@ -60,5 +72,84 @@ component.methods = {
         } else {
             $(e.target).addClass('dirty');
         }
+
+        var index = $(e.target).parents('tr').attr('data-row-index');
+        if ($(e.target).parents('tr').hasClass('new-record')) {
+            this.status[index] = 'new';
+        } else if ($(e.target).parents('tr').hasClass('remove-record')) {
+            this.status[index] = 'remove';
+        } else if ($(e.target).parents('tr').hasClass('removed-record')) {
+            this.status[index] = 'removed';
+        } else if ($(e.target).parents('tr').find('.dirty').length > 0) {
+            this.status[index] = 'dirty';
+        } else {
+            this.status[index] = 'plain';
+        }
+    },
+    generateSql: function () {
+        var request = {
+            sql: '',
+            database: this.database,
+            parameters: [],
+            placeholders: [],
+            dbTypes: []
+        };
+        for (var i = 0; i < this.rows.length; ++i) {
+            this.generateSingleSql(i, request);
+        }
+        return request;
+    },
+    generateSingleSql: function (index, request) {
+        var sql = '';
+        if (!this.status[index]) return '';
+        else if (this.status[index] === 'new') {
+            request.sql += ('INSERT INTO `' + this.table + '` (' + this.generateColumns() + ') VALUES (' + this.generateValues(index, request) + ');\r\n');
+        } else if (this.status[index] === 'remove') {
+            request.sql += ('DELETE FROM `' + this.table + '` WHERE ' + this.generateCondition(index, request) + ' LIMIT 1;\r\n');
+        } else if (this.status[index] === 'dirty') {
+            request.sql += ('UPDATE `' + this.table + '` SET ' + this.generateUpdate(index, request) + ' WHERE ' + this.generateCondition(index, request) + ' LIMIT 1;\r\n');
+        }
+    },
+    generateColumns: function () {
+        return this.columns.map(x => '`' + x.field + '`').join(', ');
+    },
+    generateUpdate: function (index, request) {
+        var doms = $('tr[data-row-index="' + index + '"]').find('td');
+        var set = [];
+        for (var i = 0; i < this.columns.length; ++i) {
+            if ($(doms[i]).find('.dirty').length === 0) {
+                continue;
+            }
+            var placeholder = `value_${index}_${i}`;
+            set.push('`' + this.columns[i].field + '` = @' + placeholder);
+            request.placeholders.push(placeholder);
+            request.dbTypes.push(this.columns[i].type);
+            request.parameters.push($($(doms[i]).find('input')[0]).val());
+        }
+        return set.join(', ');
+    },
+    generateValues: function (index, request) {
+        var doms = $('tr[data-row-index="' + index + '"]').find('input');
+        var values = [];
+        for (var i = 0; i < this.columns.length; ++i) {
+            var placeholder = `value_${index}_${i}`;
+            values.push('@' + placeholder);
+            request.placeholders.push(placeholder);
+            request.dbTypes.push(this.columns[i].type);
+            request.parameters.push($(doms[i]).val());
+        }
+        return values.join(', ');
+    },
+    generateCondition: function (index, request) {
+        var conditions = [];
+        var doms = $('tr[data-row-index="' + index + '"]').find('input');
+        for (var i = 0; i < this.columns.length; ++i) {
+            var placeholder = `condition_${index}_${i}`;
+            conditions.push('`' + this.columns[i].field + '` = @' + placeholder);
+            request.placeholders.push(placeholder);
+            request.dbTypes.push(this.columns[i].type);
+            request.parameters.push($(doms[i]).attr('data-origin'));
+        }
+        return conditions.join(' AND ');
     }
 };
