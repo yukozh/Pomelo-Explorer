@@ -20,7 +20,7 @@ if (-not (Check-Command 'node --version')) {
 }
 
 # Check .NET Core SDK 3.1
-if (-not (Check-Command 'dotnet') -or -not((Invoke-Expression 'dotnet --version') -contains '3.1')) {
+if (-not (Check-Command 'dotnet') -or -not((Invoke-Expression 'dotnet --version').Contains('3.1'))) {
     Write-Host 'Missing .NET Core 3.1 or higher, downloading from Pomelo Cloud.'
     Invoke-WebRequest 'https://resource.pomelo.cloud/third-party/dotnet-sdk-3.1.102-win-x64.exe' -OutFile 'dotnet-sdk-3.1.102-win-x64.exe'
     $InstallNodeJsCommand = '.\dotnet-sdk-3.1.102-win-x64.exe /install /norestart /quiet'
@@ -31,7 +31,7 @@ if (-not (Check-Command 'dotnet') -or -not((Invoke-Expression 'dotnet --version'
 
 # Download Electron
 $RepoPath = Get-Location
-$ElectronPath = Join-Path $RepoPath 'Pomelo-Explorer'
+$ElectronPath = Join-Path $RepoPath 'Pomelo.Explorer'
 $ElectronPath = Join-Path $ElectronPath 'obj'
 if (-not (Test-Path $ElectronPath)) {
     New-Item -Path $ElectronPath -ItemType Directory
