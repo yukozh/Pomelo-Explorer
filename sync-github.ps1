@@ -1,5 +1,6 @@
 ﻿param(
     [String] $GitUser,
+    [String] $GitEmail,
     [String] $GitPAT,
     [String] $WorkingPath
 )
@@ -30,9 +31,12 @@ $GitHubRepoPath = Join-Path $WorkingPath 'Pomelo-Explorer'
 Get-ChildItem $AzureRepoPath | Where { !(($_ -is [System.IO.DirectoryInfo]) -and ($_.Name -eq ".git")) } | Copy-Item -Destination $GitHubRepoPath -Recurse -Force
 
 Set-Location $GitHubRepoPath
+$ConfigPath = Join-Path $GitHubRepoPath '.git'
+$ConfigPath = Join-Path $ConfigPath 'config'
+$CommitCommand = 'git -c user.name="' + $GitUser + '" -c user.email="' + $GitEmail + '" commit -a -m "Auto sync from Azure DevOps"';
 
 git add -A
-git commit -a -m "Auto sync from Azure DevOps"
+Invoke-Expression $CommitCommand
 git push
 
 Write-Host 'The changes has been pushed to GitHub.'
