@@ -1,7 +1,6 @@
 ﻿component.menu = '/static/mysql/Resource/browse/menu';
 
 component.created = function () {
-    console.warn(this);
     this.getTable({ database: this.database, table: this.table, expression: null, page: 0 });
 };
 
@@ -12,7 +11,6 @@ component.data = function () {
         table: null,
         rows: [],
         status: [],
-        origin: [],
         columns: [],
         page: 0
     };
@@ -37,10 +35,12 @@ component.computed = {
 
 component.methods = {
     save: function () {
-        var request = this.generateSql();
-        qv.post('/mysql/executenonquery/' + this.instance, request)
+        var self = this;
+        var request = self.generateSql();
+        qv.post('/mysql/executenonquery/' + self.instance, request)
             .then(data => {
                 // TODO: Update status bar, clean dirty
+                self.cleanDirty();
                 alert('OK');
             });
     },
@@ -52,8 +52,8 @@ component.methods = {
                 return qv.post('/mysql/gettablerows/' + self.instance, params);
             })
             .then(data => {
+                self.status = data.values.map(x => 'plain');
                 self.rows = data.values;
-                self.origin = JSON.parse(JSON.stringify(data.values));
             });
     },
     getWindowHeight: function () {
@@ -67,10 +67,12 @@ component.methods = {
         }
     },
     handleDirty: function (e) {
-        if (e.target.value === $(e.target).attr('data-origin')) {
-            $(e.target).removeClass('dirty');
-        } else {
-            $(e.target).addClass('dirty');
+        if (!$(e.target).parents('tr').hasClass('new-record')) {
+            if (e.target.value === $(e.target).attr('data-origin')) {
+                $(e.target).removeClass('dirty');
+            } else {
+                $(e.target).addClass('dirty');
+            }
         }
 
         var index = $(e.target).parents('tr').attr('data-row-index');
@@ -84,6 +86,27 @@ component.methods = {
             this.status[index] = 'dirty';
         } else {
             this.status[index] = 'plain';
+        }
+    },
+    cleanDirty: function () {
+        for (var i = 0; i < this.rows.length; ++i) {
+            this.cleanSingle(i);
+        }
+    },
+    cleanSingle: function (index) {
+        if (this.status[index] === 'remove') {
+            this.status[index] = 'removed';
+            $('tr[data-row-index="' + index + '"]').hide();
+        } else {
+            this.status[index] = 'plain';
+            console.warn('clean ' + index);
+            $('tr[data-row-index="' + index + '"]').removeClass('new-record');
+            $('tr[data-row-index="' + index + '"]').removeClass('dirty');
+            var fields = $('tr[data-row-index="' + index + '"]').find('.dirty');
+            for (var i = 0; i < fields.length; ++i) {
+                $(fields[i]).attr('data-origin', $(fields[i]).val());
+                $(fields[i]).removeClass('dirty');
+            }
         }
     },
     generateSql: function () {
@@ -151,5 +174,13 @@ component.methods = {
             request.parameters.push($(doms[i]).attr('data-origin'));
         }
         return conditions.join(' AND ');
+    },
+    newRow: function () {
+        var row = [];
+        for (var i = 0; i < this.columns.length; ++i) {
+            row.push(null);
+        }
+        this.$data.status.push('new');
+        this.$data.rows.push(row);
     }
 };

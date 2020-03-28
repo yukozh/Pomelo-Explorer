@@ -6,7 +6,7 @@
         <a class="pomelo-mysql-table-toolbar-item">
             <i class="fa fa-rotate-left"></i> Discard
         </a>
-        <a class="pomelo-mysql-table-toolbar-item">
+        <a class="pomelo-mysql-table-toolbar-item" v-on:click="newRow">
             <i class="fa fa-plus"></i> New
         </a>
         <a class="pomelo-mysql-table-toolbar-item">
@@ -21,7 +21,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(x, i) in rows" v-bind:data-row-index="i">
+                <tr v-for="(x, i) in rows" v-bind:data-row-index="i" v-bind:class="{ 'new-record': status[i] === 'new' }">
                     <td v-for="(y, j) in x">
                         <input type="text" class="pomelo-table-textbox" v-bind:data-origin="y" v-bind:value="y" v-on:blur="handleDirty($event)" />
                     </td>
