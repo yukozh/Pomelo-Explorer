@@ -12,7 +12,13 @@ component.data = function () {
         rows: [],
         status: [],
         columns: [],
-        page: 0
+        page: 0,
+        showEditMenu: false,
+        selected: {
+            row: null,
+            col: null
+        },
+        menuLeft: 0
     };
 };
 
@@ -182,5 +188,8 @@ component.methods = {
         }
         this.$data.status.push('new');
         this.$data.rows.push(row);
+    },
+    setEditMenuLeft: function (e) {
+        this.menuLeft = $(e.target).offset().left;
     }
 };

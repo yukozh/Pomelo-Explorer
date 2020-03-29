@@ -12,6 +12,17 @@
         <a class="pomelo-mysql-table-toolbar-item">
             <i class="fa fa-minus"></i> Remove
         </a>
+        <a class="pomelo-mysql-table-toolbar-item" v-on:click="showEditMenu = !showEditMenu; setEditMenuLeft($event);">
+            <i class="fa fa-pencil-square-o"></i> Edit
+        </a>
+    </div>
+    <div class="pomelo-toggle-menu" v-if="showEditMenu && selected.col != null && selected.row != null" v-bind:style="{ 'top': tableHeight + 'px', 'left': menuLeft + 'px' }">
+        <a v-if="columns[selected.col].type.indexOf('text') >= 0 || columns[selected.col].type.indexOf('char') >= 0">Edit as Text</a>
+        <a v-if="columns[selected.col].type.indexOf('json') >= 0">Edit as JSON</a>
+        <a v-if="columns[selected.col].type.indexOf('blob') >= 0 || columns[selected.col].type.indexOf('binary') >= 0">Edit as Image</a>
+        <a v-if="columns[selected.col].type.indexOf('blob') >= 0 || columns[selected.col].type.indexOf('binary') >= 0">Edit as HEX</a>
+        <hr class="pomelo-toggle-menu-split" />
+        <a v-if="selected.col && columns[selected.col].null === 'YES'">Set NULL</a>
     </div>
     <div class="pomelo-table-outer" v-bind:style="{ 'height': tableHeight }">
         <table class="pomelo-table hover-display-border">
@@ -22,8 +33,8 @@
             </thead>
             <tbody>
                 <tr v-for="(x, i) in rows" v-bind:data-row-index="i" v-bind:class="{ 'new-record': status[i] === 'new' }">
-                    <td v-for="(y, j) in x">
-                        <input type="text" class="pomelo-table-textbox" v-bind:data-origin="y" v-bind:value="y" v-on:blur="handleDirty($event)" />
+                    <td v-for="(y, j) in x" v-on:click="selected.row = i; selected.col = j;">
+                        <input type="text" class="pomelo-table-textbox" v-bind:class="{ 'selected': selected.row === i && selected.col === j }" v-bind:data-origin="y" v-bind:value="y" v-on:blur="handleDirty($event)" />
                     </td>
                 </tr>
             </tbody>

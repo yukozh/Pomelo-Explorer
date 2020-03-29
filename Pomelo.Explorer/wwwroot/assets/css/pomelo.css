@@ -243,6 +243,11 @@ a {
         background: rgba(104, 33, 122, 0.3);
     }
 
+    .pomelo-table-textbox.selected {
+        border-color: rgb(0,124,202);
+        background: rgba(0,124,202, 0.3);
+    }
+
 .pomelo-table.hover-display-border:hover td,
 .pomelo-table.hover-display-border:hover th {
     border-left-color: #444;
@@ -251,4 +256,32 @@ a {
 
 tr.new-record {
     background: rgba(0,124,202,0.4);
+}
+
+.pomelo-toggle-menu {
+    position: fixed;
+    padding: 10px 20px;
+    background: rgb(37,37,38);
+    box-shadow: 0 0 8px rgba(0,0,0,0.4);
+    font-size: 12px;
+}
+
+.pomelo-toggle-menu-split {
+    height: 1px;
+    border: none;
+    border-top: 1px solid rgb(97,97,98);
+    margin-left: -15px;
+    margin-right: -15px;
+}
+
+.pomelo-toggle-menu a {
+    display: block;
+    margin: 0 -20px;
+    padding: 0 25px;
+    line-height: 25px;
+}
+
+.pomelo-toggle-menu a:hover {
+    background: rgb(9,71,113);
+    color: #fff;
 }

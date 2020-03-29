@@ -44,5 +44,7 @@
     <ProjectReference Include="..\Pomelo.Explorer.Definitions\Pomelo.Explorer.Definitions.csproj" />
   </ItemGroup>
 
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
 
 </Project>
