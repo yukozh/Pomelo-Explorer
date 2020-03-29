@@ -59,7 +59,14 @@ if (-not (Test-Path $ElectronPath)) {
 if (-not (Check-Command 'electronize')) {
     Write-Host 'Electronize CLI is not found, downloading...'
     $InstallElectronizeCommand = 'dotnet tool install --global ElectronNET.CLI'
-    Invoke-Expression $InstallNodeJsCommand
+    Invoke-Expression $InstallElectronizeCommand
+}
+
+# Check libman
+if (-not (Check-Command 'electronize')) {
+    Write-Host 'libman is not found, downloading...'
+    $InstallLibmanCommand = 'dotnet tool install -g Microsoft.Web.LibraryManager.Cli'
+    Invoke-Expression $InstallLibmanCommand
 }
 
 Write-Host 'The environment setup finished!'

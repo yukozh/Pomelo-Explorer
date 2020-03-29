@@ -17,9 +17,9 @@
         </a>
     </div>
     <div class="pomelo-toggle-menu" v-if="showEditMenu && selected.col != null && selected.row != null" v-bind:style="{ 'top': tableHeight + 'px', 'left': menuLeft + 'px' }">
-        <a v-if="columns[selected.col].type.indexOf('text') >= 0 || columns[selected.col].type.indexOf('char') >= 0">Edit as Text</a>
+        <a v-if="columns[selected.col].type.indexOf('text') >= 0 || columns[selected.col].type.indexOf('char') >= 0" v-on:click="openEditor('text')">Edit as Text</a>
         <a v-if="columns[selected.col].type.indexOf('json') >= 0">Edit as JSON</a>
-        <a v-if="columns[selected.col].type.indexOf('blob') >= 0 || columns[selected.col].type.indexOf('binary') >= 0">Edit as Image</a>
+        <a v-if="columns[selected.col].type.indexOf('blob') >= 0 || columns[selected.col].type.indexOf('binary') >= 0">Replace by File</a>
         <a v-if="columns[selected.col].type.indexOf('blob') >= 0 || columns[selected.col].type.indexOf('binary') >= 0">Edit as HEX</a>
         <hr class="pomelo-toggle-menu-split" />
         <a v-if="selected.col && columns[selected.col].null === 'YES'">Set NULL</a>

@@ -147,11 +147,19 @@ namespace Pomelo.Explorer.MySQL.Controllers
                         var row = new List<string>();
                         for (var i = 0; i < reader.FieldCount; ++i)
                         {
-                            row.Add(reader[i].ToString());
+                            if (reader.GetFieldType(i) == typeof(byte[]))
+                            {
+                                row.Add(Convert.ToBase64String((byte[])reader[i]));
+                            }
+                            else
+                            {
+                                row.Add(reader[i].ToString());
+                            }
                         }
                         result.Add(row);
                     }
                 }
+
                 return Json(new TableResponse
                 { 
                     Columns = columns,

@@ -44,7 +44,15 @@
     <ProjectReference Include="..\Pomelo.Explorer.Definitions\Pomelo.Explorer.Definitions.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Resource\lib\" />
+  </ItemGroup>
+
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="libman restore" />
+  </Target>
 
 
 </Project>

@@ -191,5 +191,16 @@ component.methods = {
     },
     setEditMenuLeft: function (e) {
         this.menuLeft = $(e.target).offset().left;
+    },
+    openEditor: function (type) {
+        var id = 'Special_Value_' + new Date().getTime().toString() + Math.round(Math.random() * 10000);
+        console.log(id);
+        var doms = $('tr[data-row-index="' + this.selected.row + '"]').find('input');
+        qv.post('/mysql/editor/set-string-special-value', { key: id, value: $(doms[this.selected.col]).val() })
+            .then(() => {
+                return qv.post('/windows/open', {
+                    url: '/mysql/editor/text/' + id
+                });
+            });
     }
 };
