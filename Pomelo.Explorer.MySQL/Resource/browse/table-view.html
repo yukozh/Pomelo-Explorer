@@ -31,10 +31,10 @@
                     <th v-for="x in columns">{{ x.field }}</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody v-if="rows.length === origin.length">
                 <tr v-for="(x, i) in rows" v-bind:data-row-index="i" v-bind:class="{ 'new-record': status[i] === 'new' }">
                     <td v-for="(y, j) in x" v-on:click="selected.row = i; selected.col = j;">
-                        <input type="text" class="pomelo-table-textbox" v-bind:class="{ 'selected': selected.row === i && selected.col === j }" v-bind:data-origin="y" v-bind:value="y" v-on:blur="handleDirty($event)" />
+                        <input type="text" class="pomelo-table-textbox" v-bind:class="{ 'selected': selected.row === i && selected.col === j, 'dirty': origin[i][j] !== rows[i][j] }" v-bind:data-origin="origin[i][j]" v-model="rows[i][j]" v-on:blur="handleDirty($event)" />
                     </td>
                 </tr>
             </tbody>

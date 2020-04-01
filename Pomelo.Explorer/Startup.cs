@@ -17,6 +17,8 @@ namespace Pomelo.Explorer
 {
     public class Startup
     {
+        public static BrowserWindow MainWindow;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -91,14 +93,13 @@ namespace Pomelo.Explorer
 
         public async void ElectronBootstrap()
         {
-            var browserWindow = await Electron.WindowManager.CreateWindowAsync(new BrowserWindowOptions
+            MainWindow = await Electron.WindowManager.CreateWindowAsync(new BrowserWindowOptions
             {
                 Width = 1152,
                 Height = 864,
                 Show = true,
                 DarkTheme = true
             }, $"http://localhost:{BridgeSettings.WebPort}/index.html");
-            browserWindow.SetTitle("Pomelo Explorer");
         }
     }
 }

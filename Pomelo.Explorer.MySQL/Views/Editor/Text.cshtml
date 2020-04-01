@@ -1,4 +1,4 @@
-﻿@Model  string
+﻿@model  Pomelo.Explorer.MySQL.Models.TextEditorViewModel
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,8 +16,7 @@
     </script>
     <script src="/assets/js/jquery.min.js"></script>
     <script src="/assets/js/i18n.js"></script>
-    <script src="/assets/js/vue.js"></script>
-    <script src="/assets/js/vue-i18n.js"></script>
+    <script src="/assets/js/pomelo.queryview.js"></script>
     <title>Pomelo</title>
     <style>
         #editor {
@@ -27,6 +26,7 @@
             right: 0;
             bottom: 55px;
         }
+
         #buttons {
             position: fixed;
             height: 35px;
@@ -35,6 +35,7 @@
             right: 0;
             padding: 10px;
         }
+
         #btn-save {
             height: 35px;
             line-height: 35px;
@@ -44,7 +45,7 @@
 </head>
 <body>
     <div>
-        <div id="editor">@Model</div>
+        <div id="editor">@Model.Value</div>
         <div id="buttons">
             <a class="button" id="btn-save">Save</a>
         </div>
@@ -54,6 +55,17 @@
         var editor = ace.edit("editor");
         editor.setTheme("ace/theme/monokai");
         editor.session.setMode("ace/mode/text");
+        $('#btn-save').click(function () {
+            $('#btn-save').addClass('disabled');
+            $('#btn-save').attr('disabled', 'disabled');
+            qv.post('/mysql/editor/set-string-special-value', {
+                key: '@Model.Id',
+                value: editor.getValue()
+            }).then(() => {
+                    var remote = window.nodeRequire('electron').remote;
+                    remote.getCurrentWindow().close();
+            });
+        });
     </script>
 </body>
 </html>

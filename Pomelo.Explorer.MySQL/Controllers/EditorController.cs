@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Pomelo.Explorer.MySQL.Models;
+using ElectronNET.API;
 
 namespace Pomelo.Explorer.MySQL.Controllers
 {
@@ -19,6 +20,10 @@ namespace Pomelo.Explorer.MySQL.Controllers
                 SpecialValues.Add(request.Key, null);
             }
             SpecialValues[request.Key] = request.Value;
+            foreach (var x in Electron.WindowManager.BrowserWindows)
+            {
+                Electron.IpcMain.Send(x, "mysql-" + request.Key, SpecialValues[request.Key]);
+            }
             return Json(true);
         }
 
@@ -64,7 +69,11 @@ namespace Pomelo.Explorer.MySQL.Controllers
         [HttpGet("/mysql/editor/text/{key}")]
         public IActionResult Text(string key, [FromQuery]string type)
         {
-            return View("Text", SpecialValues[key] as string);
+            return View("Text", new TextEditorViewModel 
+            {
+                Id = key,
+                Value = SpecialValues[key] as string
+            });
         }
 
         [HttpGet("/mysql/editor/hex/{key}")]

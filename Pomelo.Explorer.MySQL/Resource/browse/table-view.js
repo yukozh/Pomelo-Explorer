@@ -10,6 +10,7 @@ component.data = function () {
         database: null,
         table: null,
         rows: [],
+        origin:[],
         status: [],
         columns: [],
         page: 0,
@@ -60,6 +61,7 @@ component.methods = {
             .then(data => {
                 self.status = data.values.map(x => 'plain');
                 self.rows = data.values;
+                self.origin = JSON.parse(JSON.stringify(data.values));
             });
     },
     getWindowHeight: function () {
@@ -73,14 +75,6 @@ component.methods = {
         }
     },
     handleDirty: function (e) {
-        if (!$(e.target).parents('tr').hasClass('new-record')) {
-            if (e.target.value === $(e.target).attr('data-origin')) {
-                $(e.target).removeClass('dirty');
-            } else {
-                $(e.target).addClass('dirty');
-            }
-        }
-
         var index = $(e.target).parents('tr').attr('data-row-index');
         if ($(e.target).parents('tr').hasClass('new-record')) {
             this.status[index] = 'new';
@@ -110,6 +104,7 @@ component.methods = {
             $('tr[data-row-index="' + index + '"]').removeClass('dirty');
             var fields = $('tr[data-row-index="' + index + '"]').find('.dirty');
             for (var i = 0; i < fields.length; ++i) {
+                this.origin[index][i] = this.rows[index][i];
                 $(fields[i]).attr('data-origin', $(fields[i]).val());
                 $(fields[i]).removeClass('dirty');
             }
@@ -188,16 +183,28 @@ component.methods = {
         }
         this.$data.status.push('new');
         this.$data.rows.push(row);
+        this.$data.origin.push(JSON.parse(JSON.stringify(row)));
     },
     setEditMenuLeft: function (e) {
         this.menuLeft = $(e.target).offset().left;
     },
     openEditor: function (type) {
+        var self = this;
+        var row = self.selected.row;
+        var col = self.selected.col;
         var id = 'Special_Value_' + new Date().getTime().toString() + Math.round(Math.random() * 10000);
-        console.log(id);
-        var doms = $('tr[data-row-index="' + this.selected.row + '"]').find('input');
-        qv.post('/mysql/editor/set-string-special-value', { key: id, value: $(doms[this.selected.col]).val() })
+        var doms = $('tr[data-row-index="' + row + '"]').find('input');
+        var dom = $(doms[col]);
+        qv.post('/mysql/editor/set-string-special-value', { key: id, value: dom.val() })
             .then(() => {
+                var ipc = window.nodeRequire('electron').ipcRenderer;
+                var channel = 'mysql-' + id;
+                ipc.on(channel, (event, arg) => {
+                    self.rows[row][col] = arg;
+                    dom.val(arg);
+                    self.handleDirty({ target: dom[0] });
+                    ipc.removeAllListeners(channel);
+                });
                 return qv.post('/windows/open', {
                     url: '/mysql/editor/text/' + id
                 });
