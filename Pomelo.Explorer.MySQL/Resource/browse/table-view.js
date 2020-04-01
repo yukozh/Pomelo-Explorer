@@ -10,7 +10,7 @@ component.data = function () {
         database: null,
         table: null,
         rows: [],
-        origin:[],
+        origin: [],
         status: [],
         columns: [],
         page: 0,
@@ -172,7 +172,7 @@ component.methods = {
             conditions.push('`' + this.columns[i].field + '` = @' + placeholder);
             request.placeholders.push(placeholder);
             request.dbTypes.push(this.columns[i].type);
-            request.parameters.push($(doms[i]).attr('data-origin'));
+            request.parameters.push(this.origin[index][i]);
         }
         return conditions.join(' AND ');
     },
@@ -190,24 +190,28 @@ component.methods = {
     },
     openEditor: function (type) {
         var self = this;
+        var id = 'Special_Value_' + new Date().getTime().toString() + Math.round(Math.random() * 10000);
         var row = self.selected.row;
         var col = self.selected.col;
-        var id = 'Special_Value_' + new Date().getTime().toString() + Math.round(Math.random() * 10000);
+        var ipc = window.nodeRequire('electron').ipcRenderer;
+        var channel = 'mysql-' + id;
         var doms = $('tr[data-row-index="' + row + '"]').find('input');
         var dom = $(doms[col]);
-        qv.post('/mysql/editor/set-string-special-value', { key: id, value: dom.val() })
-            .then(() => {
-                var ipc = window.nodeRequire('electron').ipcRenderer;
-                var channel = 'mysql-' + id;
-                ipc.on(channel, (event, arg) => {
-                    self.rows[row][col] = arg;
-                    dom.val(arg);
-                    self.handleDirty({ target: dom[0] });
-                    ipc.removeAllListeners(channel);
+        ipc.on(channel, (event, arg) => {
+            self.rows[row][col] = arg;
+            dom.val(arg);
+            self.handleDirty({ target: dom[0] });
+            ipc.removeAllListeners(channel);
+        });
+        if (type === 'text') {
+            qv.post('/mysql/editor/set-string-special-value', { key: id, value: dom.val() })
+                .then(() => {
+                    return qv.post('/windows/open', {
+                        url: '/mysql/editor/text/' + id
+                    });
                 });
-                return qv.post('/windows/open', {
-                    url: '/mysql/editor/text/' + id
-                });
-            });
+        } else if (type === 'blob') {
+            qv.post('/mysql/editor/set-blob-special-value', { key: id, value: null });
+        }
     }
 };

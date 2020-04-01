@@ -14,7 +14,11 @@ namespace Pomelo.Explorer.MySQL
         public static MySqlType Parse(string type)
         {
             var index = type.IndexOf('(');
-            var length = Convert.ToInt32(type.Substring(index + 1, type.IndexOf(')') - index - 1));
+            var length = 0;
+            if (type.IndexOf(')') > index)
+            {
+                length = Convert.ToInt32(type.Substring(index + 1, type.IndexOf(')') - index - 1));
+            }
             var unsigned = type.IndexOf("unsigned") >= 0;
             var plainType = type.Split(' ')[0];
             if (index > 0)

@@ -5,12 +5,13 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Pomelo.Explorer.MySQL.Models;
 using ElectronNET.API;
+using ElectronNET.API.Entities;
 
 namespace Pomelo.Explorer.MySQL.Controllers
 {
     public class EditorController : Controller
     {
-        public static Dictionary<string, object> SpecialValues = new Dictionary<string, object>();
+        public static Dictionary<string, string> SpecialValues = new Dictionary<string, string>();
 
         [HttpPost("/mysql/editor/set-string-special-value")]
         public IActionResult SetStringSpecialValue([FromBody]SetSpecialValueRequest request)
@@ -28,32 +29,36 @@ namespace Pomelo.Explorer.MySQL.Controllers
         }
 
         [HttpPost("/mysql/editor/set-blob-special-value")]
-        public IActionResult SetBlobSpecialValue([FromBody]SetSpecialValueRequest request)
+        public async Task<IActionResult> SetBlobSpecialValue([FromBody]SetSpecialValueRequest request)
         {
             if (!SpecialValues.ContainsKey(request.Key))
             {
                 SpecialValues.Add(request.Key, null);
             }
+
+            var mainWindow = Electron.WindowManager.BrowserWindows.First();
+            var options = new OpenDialogOptions
+            {
+                Properties = new OpenDialogProperty[] {
+                        OpenDialogProperty.openFile
+                }
+            };
+
+            request.Value = (await Electron.Dialog.ShowOpenDialogAsync(mainWindow, options)).FirstOrDefault();
             if (System.IO.File.Exists(request.Value))
             {
-                SpecialValues[request.Key] = Convert.FromBase64String(request.Value);
+                SpecialValues[request.Key] = Convert.ToBase64String(System.IO.File.ReadAllBytes(request.Value));
+                foreach (var x in Electron.WindowManager.BrowserWindows)
+                {
+                    Electron.IpcMain.Send(x, "mysql-" + request.Key, SpecialValues[request.Key]);
+                }
                 return Json(true);
             }
             else 
             {
+                // Show dialog
                 return Json(false);
             }
-        }
-
-        [HttpPost("/mysql/editor/set-image-special-value")]
-        public async Task<IActionResult> SetImageSpecialValue([FromBody]SetSpecialValueRequest request)
-        {
-            if (!SpecialValues.ContainsKey(request.Key))
-            {
-                SpecialValues.Add(request.Key, null);
-            }
-            SpecialValues[request.Key] = await System.IO.File.ReadAllBytesAsync(request.Value);
-            return Json(true);
         }
 
         [HttpPost("/mysql/editor/remove-special-value/{id}")]
@@ -79,7 +84,7 @@ namespace Pomelo.Explorer.MySQL.Controllers
         [HttpGet("/mysql/editor/hex/{key}")]
         public IActionResult Hex(string key)
         {
-            return View((SpecialValues[key] as byte[]).Select(x => string.Format("{0:X2}", x)).ToArray());
+            return View((Convert.FromBase64String(SpecialValues[key])).Select(x => string.Format("{0:X2}", x)).ToArray());
         }
 
         [HttpPost("/mysql/editor/hex/{key}")]
@@ -91,7 +96,7 @@ namespace Pomelo.Explorer.MySQL.Controllers
             }
 
             var bytes = hex.Select(x => byte.Parse(x, System.Globalization.NumberStyles.HexNumber)).ToArray();
-            SpecialValues[key] = bytes;
+            SpecialValues[key] = Convert.ToBase64String(bytes);
 
             return Json(true);
         }
