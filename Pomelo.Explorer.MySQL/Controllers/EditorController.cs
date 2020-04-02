@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Text.Json;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Pomelo.Explorer.MySQL.Models;
@@ -85,20 +86,40 @@ namespace Pomelo.Explorer.MySQL.Controllers
         [HttpGet("/mysql/editor/hex/{key}")]
         public IActionResult Hex(string key)
         {
-            return View((Convert.FromBase64String(SpecialValues[key])).Select(x => string.Format("{0:X2}", x)).ToArray());
+            var data = Convert.FromBase64String(SpecialValues[key])
+                .Select((x, i) => new { Index = i, Value = string.Format("{0:X2}", x) })
+                .GroupBy(x => x.Index / 8)
+                .Select(x => x.Select(y => y.Value).ToList())
+                .ToList();
+            return View(data);
         }
 
         [HttpPost("/mysql/editor/hex/{key}")]
-        public IActionResult Hex(string key, [FromBody]string[] hex)
+        public IActionResult Hex(string key, [FromBody]SetSpecialValueHexRequest request)
         {
+            var hex = request.Data;
             if (!SpecialValues.ContainsKey(key))
             {
                 SpecialValues.Add(key, null);
             }
-
-            var bytes = hex.Select(x => byte.Parse(x, System.Globalization.NumberStyles.HexNumber)).ToArray();
+            var empty = 0;
+            if (hex.Length > 0)
+            { 
+                for (var i = hex.Length - 1; i >= 0; --i)
+                {
+                    if (!string.IsNullOrWhiteSpace(hex[i]))
+                    {
+                        break;
+                    }
+                    ++empty;
+                }
+            }
+            var bytes = hex.Take(hex.Length - empty).Select(x => byte.Parse(x, System.Globalization.NumberStyles.HexNumber)).ToArray();
             SpecialValues[key] = Convert.ToBase64String(bytes);
-
+            foreach (var x in Electron.WindowManager.BrowserWindows)
+            {
+                Electron.IpcMain.Send(x, "mysql-" + key, SpecialValues[key]);
+            }
             return Json(true);
         }
     }

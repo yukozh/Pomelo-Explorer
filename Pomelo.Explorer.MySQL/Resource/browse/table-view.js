@@ -219,6 +219,14 @@ component.methods = {
                 .then(() => {
                     listen();
                 });
+        } else if (type === 'hex') {
+            qv.post('/mysql/editor/set-string-special-value', { key: id, value: dom.val() })
+                .then(() => {
+                    listen();
+                    return qv.post('/windows/open', {
+                        url: '/mysql/editor/hex/' + id
+                    });
+                });
         }
     }
 };
