@@ -54,7 +54,7 @@
     <script>
         var editor = ace.edit("editor");
         editor.setTheme("ace/theme/monokai");
-        editor.session.setMode("ace/mode/text");
+        editor.session.setMode("ace/mode/@(Model.IsJson ? "json" : "text")");
         $('#btn-save').click(function () {
             $('#btn-save').addClass('disabled');
             $('#btn-save').attr('disabled', 'disabled');
@@ -62,8 +62,8 @@
                 key: '@Model.Id',
                 value: editor.getValue()
             }).then(() => {
-                    var remote = window.nodeRequire('electron').remote;
-                    remote.getCurrentWindow().close();
+                var remote = window.nodeRequire('electron').remote;
+                remote.getCurrentWindow().close();
             });
         });
     </script>

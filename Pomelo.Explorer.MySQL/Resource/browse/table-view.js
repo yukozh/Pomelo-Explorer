@@ -197,21 +197,28 @@ component.methods = {
         var channel = 'mysql-' + id;
         var doms = $('tr[data-row-index="' + row + '"]').find('input');
         var dom = $(doms[col]);
-        ipc.on(channel, (event, arg) => {
-            self.rows[row][col] = arg;
-            dom.val(arg);
-            self.handleDirty({ target: dom[0] });
-            ipc.removeAllListeners(channel);
-        });
-        if (type === 'text') {
+        var listen = function () {
+            ipc.on(channel, (event, arg) => {
+                console.log(arg);
+                self.rows[row][col] = arg;
+                dom.val(arg);
+                self.handleDirty({ target: dom[0] });
+                ipc.removeAllListeners(channel);
+            });
+        };
+        if (type === 'text' || type === 'json') {
             qv.post('/mysql/editor/set-string-special-value', { key: id, value: dom.val() })
                 .then(() => {
+                    listen();
                     return qv.post('/windows/open', {
-                        url: '/mysql/editor/text/' + id
+                        url: '/mysql/editor/text/' + type + '/' + id
                     });
                 });
         } else if (type === 'blob') {
-            qv.post('/mysql/editor/set-blob-special-value', { key: id, value: null });
+            qv.post('/mysql/editor/set-blob-special-value', { key: id, value: null })
+                .then(() => {
+                    listen();
+                });
         }
     }
 };

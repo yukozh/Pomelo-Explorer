@@ -71,13 +71,14 @@ namespace Pomelo.Explorer.MySQL.Controllers
             return Json(true);
         }
 
-        [HttpGet("/mysql/editor/text/{key}")]
-        public IActionResult Text(string key, [FromQuery]string type)
+        [HttpGet("/mysql/editor/text/{type}/{key}")]
+        public IActionResult Text(string key, string type)
         {
             return View("Text", new TextEditorViewModel 
             {
                 Id = key,
-                Value = SpecialValues[key] as string
+                Value = SpecialValues[key] as string,
+                IsJson = type == "json"
             });
         }
 
