@@ -3,7 +3,7 @@
         <a v-on:click="save" class="pomelo-mysql-table-toolbar-item">
             <i class="fa fa-save"></i> Save
         </a>
-        <a class="pomelo-mysql-table-toolbar-item">
+        <a class="pomelo-mysql-table-toolbar-item" v-on:click="discard">
             <i class="fa fa-rotate-left"></i> Discard
         </a>
         <a class="pomelo-mysql-table-toolbar-item" v-on:click="newRow">
@@ -17,7 +17,8 @@
         </a>
     </div>
     <div class="pomelo-toggle-menu" v-if="showEditMenu && selected.col != null && selected.row != null" v-bind:style="{ 'top': tableHeight + 'px', 'left': menuLeft + 'px' }">
-        <a v-on:click="openEditor('text')">Edit as Text</a>
+        <a v-on:click="openEditor('text')" v-if="!(columns[selected.col].type.indexOf('blob') >= 0 || columns[selected.col].type.indexOf('binary') >= 0)">Edit as Text</a>
+        <a v-on:click="openEditor('text')" v-else>Edit as Base 64</a>
         <a v-if="columns[selected.col].type.indexOf('json') >= 0 || columns[selected.col].type.indexOf('text') >= 0 || columns[selected.col].type.indexOf('char') >= 0" v-on:click="openEditor('json'); showEditMenu = false;">Edit as JSON</a>
         <a v-if="columns[selected.col].type.indexOf('blob') >= 0 || columns[selected.col].type.indexOf('binary') >= 0" v-on:click="openEditor('blob'); showEditMenu = false;">Replace by File</a>
         <a v-if="columns[selected.col].type.indexOf('blob') >= 0 || columns[selected.col].type.indexOf('binary') >= 0" v-on:click="openEditor('hex'); showEditMenu = false;">Edit as HEX</a>
@@ -38,7 +39,8 @@
                                class="pomelo-table-textbox" 
                                v-bind:class="{ 'selected': selected.row === i && selected.col === j, 'dirty': origin[i][j] !== rows[i][j] }" 
                                v-bind:data-origin="origin[i][j]" v-model="rows[i][j]" v-on:blur="handleDirty($event)"
-                               v-bind:placeholder="(rows[i][j] === null && columns[j].null === 'YES' ? '(NULL)' : null)" />
+                               v-bind:placeholder="(rows[i][j] === null && columns[j].null === 'YES' ? '(NULL)' : null)"
+                               v-bind:disabled="columns[j].type.indexOf('binary') >= 0 || columns[j].type.indexOf('blob') >= 0"/>
                     </td>
                 </tr>
             </tbody>

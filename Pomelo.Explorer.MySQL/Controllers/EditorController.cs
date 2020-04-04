@@ -22,10 +22,7 @@ namespace Pomelo.Explorer.MySQL.Controllers
                 SpecialValues.Add(request.Key, null);
             }
             SpecialValues[request.Key] = request.Value;
-            foreach (var x in Electron.WindowManager.BrowserWindows)
-            {
-                Electron.IpcMain.Send(x, "mysql-" + request.Key, SpecialValues[request.Key]);
-            }
+            BroadcastValueChanged(request.Key, request.KeepListen);
             return Json(true);
         }
 
@@ -49,10 +46,7 @@ namespace Pomelo.Explorer.MySQL.Controllers
             if (System.IO.File.Exists(request.Value))
             {
                 SpecialValues[request.Key] = Convert.ToBase64String(System.IO.File.ReadAllBytes(request.Value));
-                foreach (var x in Electron.WindowManager.BrowserWindows)
-                {
-                    Electron.IpcMain.Send(x, "mysql-" + request.Key, SpecialValues[request.Key]);
-                }
+                BroadcastValueChanged(request.Key);
                 return Json(true);
             }
             else 
@@ -116,11 +110,20 @@ namespace Pomelo.Explorer.MySQL.Controllers
             }
             var bytes = hex.Take(hex.Length - empty).Select(x => byte.Parse(x, System.Globalization.NumberStyles.HexNumber)).ToArray();
             SpecialValues[key] = Convert.ToBase64String(bytes);
+            BroadcastValueChanged(key);
+            return Json(true);
+        }
+
+        private static void BroadcastValueChanged(string key, bool keepListen = false)
+        {
             foreach (var x in Electron.WindowManager.BrowserWindows)
             {
-                Electron.IpcMain.Send(x, "mysql-" + key, SpecialValues[key]);
+                try
+                {
+                    Electron.IpcMain.Send(x, "mysql-" + key, SpecialValues[key], keepListen);
+                }
+                catch { }
             }
-            return Json(true);
         }
     }
 }

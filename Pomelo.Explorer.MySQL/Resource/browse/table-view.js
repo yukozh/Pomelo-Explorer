@@ -202,16 +202,17 @@ component.methods = {
         var doms = $('tr[data-row-index="' + row + '"]').find('input');
         var dom = $(doms[col]);
         var listen = function () {
-            ipc.on(channel, (event, arg) => {
-                console.log(arg);
-                self.rows[row][col] = arg;
-                dom.val(arg);
+            ipc.on(channel, (event, val, keepListen) => {
+                console.log(val);
+                app.$set(self.$data.rows[row], col, val);
                 self.handleDirty({ target: dom[0] });
-                ipc.removeAllListeners(channel);
+                if (!keepListen) {
+                    ipc.removeAllListeners(channel);
+                }
             });
         };
         if (type === 'text' || type === 'json') {
-            qv.post('/mysql/editor/set-string-special-value', { key: id, value: dom.val() })
+            qv.post('/mysql/editor/set-string-special-value', { key: id, value: dom.val(), keepListen: true })
                 .then(() => {
                     listen();
                     return qv.post('/windows/open', {
@@ -224,13 +225,25 @@ component.methods = {
                     listen();
                 });
         } else if (type === 'hex') {
-            qv.post('/mysql/editor/set-string-special-value', { key: id, value: dom.val() })
+            qv.post('/mysql/editor/set-string-special-value', { key: id, value: dom.val(), keepListen: true })
                 .then(() => {
                     listen();
                     return qv.post('/windows/open', {
                         url: '/mysql/editor/hex/' + id
                     });
                 });
+        }
+    },
+    discard: function () {
+        for (var i = 0; i < this.rows.length; ++i) {
+            for (var j = 0; j < this.columns.length; ++j) {
+                app.$set(this.$data.rows[i], j, this.$data.origin[i][j]);
+                if (this.status[i] === 'new') {
+                    app.$set(this.$data.status, i, 'removed');
+                } else {
+                    app.$set(this.$data.status, i, 'plain');
+                }
+            }
         }
     }
 };
