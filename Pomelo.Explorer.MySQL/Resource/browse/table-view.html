@@ -38,7 +38,7 @@
                                class="pomelo-table-textbox" 
                                v-bind:class="{ 'selected': selected.row === i && selected.col === j, 'dirty': origin[i][j] !== rows[i][j] }" 
                                v-bind:data-origin="origin[i][j]" v-model="rows[i][j]" v-on:blur="handleDirty($event)"
-                               v-bind:placeholder="(columns[j].null === 'YES' ? '(NULL)' : null)" />
+                               v-bind:placeholder="(rows[i][j] === null && columns[j].null === 'YES' ? '(NULL)' : null)" />
                     </td>
                 </tr>
             </tbody>

@@ -211,7 +211,7 @@ namespace Pomelo.Explorer.MySQL.Controllers
                     for (var i = 0; i < request.Parameters.Length; ++i)
                     {
                         MySqlParameter param;
-                        if (request.Parameters[i] == null)
+                        if (request.Parameters[i] != null)
                         {
                             var converter = MySqlTypeMapper.Map[MySqlDbTypeParser.Parse(request.DbTypes[i].ToString()).Type];
                             var value = request.Parameters[i];

@@ -148,7 +148,7 @@ component.methods = {
             set.push('`' + this.columns[i].field + '` = @' + placeholder);
             request.placeholders.push(placeholder);
             request.dbTypes.push(this.columns[i].type);
-            request.parameters.push($($(doms[i]).find('input')[0]).val());
+            request.parameters.push(this.rows[index][i]);
         }
         return set.join(', ');
     },
@@ -160,7 +160,7 @@ component.methods = {
             values.push('@' + placeholder);
             request.placeholders.push(placeholder);
             request.dbTypes.push(this.columns[i].type);
-            request.parameters.push($(doms[i]).val());
+            request.parameters.push(this.rows[index][i]);
         }
         return values.join(', ');
     },
@@ -169,7 +169,11 @@ component.methods = {
         var doms = $('tr[data-row-index="' + index + '"]').find('input');
         for (var i = 0; i < this.columns.length; ++i) {
             var placeholder = `condition_${index}_${i}`;
-            conditions.push('`' + this.columns[i].field + '` = @' + placeholder);
+            if (this.origin[index][i] !== null) {
+                conditions.push('`' + this.columns[i].field + '` = @' + placeholder);
+            } else {
+                conditions.push('`' + this.columns[i].field + '` IS NULL');
+            }
             request.placeholders.push(placeholder);
             request.dbTypes.push(this.columns[i].type);
             request.parameters.push(this.origin[index][i]);
