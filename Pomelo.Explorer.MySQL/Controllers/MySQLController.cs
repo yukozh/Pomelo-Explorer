@@ -147,7 +147,11 @@ namespace Pomelo.Explorer.MySQL.Controllers
                         var row = new List<string>();
                         for (var i = 0; i < reader.FieldCount; ++i)
                         {
-                            if (reader.GetFieldType(i) == typeof(byte[]))
+                            if (reader.IsDBNull(i))
+                            {
+                                row.Add(null);
+                            }
+                            else if (reader.GetFieldType(i) == typeof(byte[]))
                             {
                                 row.Add(Convert.ToBase64String((byte[])reader[i]));
                             }
@@ -206,9 +210,17 @@ namespace Pomelo.Explorer.MySQL.Controllers
                 {
                     for (var i = 0; i < request.Parameters.Length; ++i)
                     {
-                        var converter = MySqlTypeMapper.Map[MySqlDbTypeParser.Parse(request.DbTypes[i].ToString()).Type];
-                        var value = request.Parameters[i];
-                        var param = new MySqlParameter(request.Placeholders[i], converter(value));
+                        MySqlParameter param;
+                        if (request.Parameters[i] == null)
+                        {
+                            var converter = MySqlTypeMapper.Map[MySqlDbTypeParser.Parse(request.DbTypes[i].ToString()).Type];
+                            var value = request.Parameters[i];
+                            param = new MySqlParameter(request.Placeholders[i], converter(value));
+                        }
+                        else
+                        {
+                            param = new MySqlParameter(request.Placeholders[i], null);
+                        }
                         command.Parameters.Add(param);
                     }
                 }
