@@ -38,10 +38,11 @@ var PomeloComponentContainer = function (el, root, onActive, onViewOpen) {
                 this.active = null;
             }
 
+            var vm;
             if (view) {
                 var qs = this.toQueryString(view, params);
                 if (!this.instance[qs]) {
-                    var vm = await this.buildViewModel(view, params);
+                    vm = await this.buildViewModel(view, params);
                     this.instance[qs] = vm;
                     var random = Math.ceil(Math.random() * 1000000000);
                     $(el).append('<div id="vm-' + random + '"></div>');
@@ -74,6 +75,20 @@ var PomeloComponentContainer = function (el, root, onActive, onViewOpen) {
             if (onViewOpen) {
                 onViewOpen(view, params);
             }
+
+            return vm;
+        },
+        reactive: async function (id) {
+            if (this.instance[id].active) {
+                var p = this.instance[qs].active();
+                if (p instanceof Promise) {
+                    await p;
+                }
+            }
+            this.instance[qs].$el.hidden = false;
+            if (this.instance[id]) {
+                this.active = this.instance[id];
+            }
         },
         close: function (vm) {
             delete this.instance[vm.$identity];
@@ -82,6 +97,9 @@ var PomeloComponentContainer = function (el, root, onActive, onViewOpen) {
             }
             vm.$el.remove();
             vm.$destroy();
+        },
+        closeById: function (id) {
+            return this.close(this.instance[id]);
         },
         buildViewModel: async function (view, param) {
             var self = this;
