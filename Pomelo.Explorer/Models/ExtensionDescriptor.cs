@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Pomelo.Explorer
+﻿namespace Pomelo.Explorer
 {
-    public struct ExtensionDescriptor
+    public class ExtensionDescriptor
     {
         public string Id { get; set; }
 

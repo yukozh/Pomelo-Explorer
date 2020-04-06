@@ -1,28 +1,19 @@
-﻿var mainContainer = new PomeloComponentContainer('#main', app, function (view) {
-    return fetch(view + '.css')
-        .then(data => {
+﻿Vue.component('svg-icon', {
+    props: ['src'],
+    data: function () {
+        return {
+            inline: ''
+        };
+    },
+    created: function () {
+        var self = this;
+        fetch(self.src).then(data => {
             return data.text();
-        })
-        .then(data => {
-            $('#component-css').html(data);
+        }).then(txt => {
+            self.inline = txt;
         });
-}, function () { });
-
-var menuContainer = new PomeloComponentContainer('#menu', app, function (view) {
-    return fetch(view + '.css')
-        .then(data => {
-            return data.text();
-        })
-        .then(data => {
-            $('#menu-css').html(data);
-            app.menu = true;
-        });
-}, function (view) {
-        if (!view) {
-            app.menu = false;
-        } else {
-            app.menu = true;
-        }
+    },
+    template: '<svg v-html="inline"></svg>'
 });
 
 var app = new Vue({
@@ -35,12 +26,15 @@ var app = new Vue({
         extensions: [],
         height: 0
     },
-    created: function () {
-        var self = this;
-        self.getExtensions();
-        self.height = window.innerHeight;
-    },
     methods: {
+        init: function () {
+            var self = this;
+            self.height = window.innerHeight;
+            self.getExtensions()
+                .then(() => {
+                    return this.loadStoredInstances();
+                });
+        },
         open: function (view, params) {
             app.$main.open(view, params);
         },
@@ -79,16 +73,66 @@ var app = new Vue({
         },
         getExtensions: function () {
             var self = this;
-            self.extensions = qv.get('/extension/list', { creatable: false })
+            return self.extensions = qv.get('/extension/list', { creatable: false })
                 .then((data) => {
                     self.extensions = data;
                 });
+        },
+        buildOpenComponent: async function (extid, instanceid, data) {
+            var tmp = this.extensions.filter(x => x.id === extid);
+            if (tmp.length === 0) {
+                return;
+            }
+            var jsUrl = '/static/' + tmp[0].id + tmp[0].create;
+            var js = await app.$main.getScript(jsUrl);
+            var component = {};
+            eval(js);
+            component.form = data;
+            component.methods.connect.call(component, instanceid);
+        },
+        loadStoredInstances: async function () {
+            var instances = await qv.get('/extension/instance', {});
+            for (var i = 0; i < instances.length; ++i) {
+                console.log(instances[i].id);
+                if (this.tab.instances.some(x => x.id === instances[i].instanceId)) {
+                    return;
+                }
+                this.buildOpenComponent(instances[i].extensionId, instances[i].instanceId, instances[i].data);
+            }
         }
     },
     mounted: function () {
+        this.init();
         this.$nextTick(() => {
             window.addEventListener('resize', () => { this.height = window.innerHeight; });
         });
+    }
+});
+
+var mainContainer = new PomeloComponentContainer('#main', app, function (view) {
+    return fetch(view + '.css')
+        .then(data => {
+            return data.text();
+        })
+        .then(data => {
+            $('#component-css').html(data);
+        });
+}, function () { });
+
+var menuContainer = new PomeloComponentContainer('#menu', app, function (view) {
+    return fetch(view + '.css')
+        .then(data => {
+            return data.text();
+        })
+        .then(data => {
+            $('#menu-css').html(data);
+            app.menu = true;
+        });
+}, function (view) {
+    if (!view) {
+        app.menu = false;
+    } else {
+        app.menu = true;
     }
 });
 
@@ -119,22 +163,4 @@ $(window).mousemove(function (e) {
 
 $(window).mouseup(function (e) {
     __split_down = false;
-});
-
-Vue.component('svg-icon', {
-    props: ['src'],
-    data: function () {
-        return {
-            inline: ''
-        };
-    },
-    created: function () {
-        var self = this;
-        fetch(self.src).then(data => {
-            return data.text();
-        }).then(txt => {
-            self.inline = txt;
-        });
-    },
-    template: '<svg v-html="inline"></svg>'
 });

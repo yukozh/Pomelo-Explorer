@@ -14,18 +14,25 @@ component.data = function () {
 };
 
 component.methods = {
-    connect: function () {
+    connect: function (instance) {
+        console.warn(instance);
         var self = this;
         self.working = true;
-        var id;
+        var reopen = instance && typeof (instance) == 'string';
+        var timestamp = instance;
         qv.post('/mysql/createconnection', self.form)
             .then(function (data) {
                 app.pushInstance(data.id, 'mysql');
-                id = data.id;
+                if (!timestamp || typeof(instance) != 'string') {
+                    timestamp = data.id;
+                }
                 return qv.post('/mysql/openconnection/' + data.id, { });
             })
             .then(function () {
-                app.openInstance(id, 'mysql');
+                if (!reopen) {
+                    app.openInstance(timestamp, 'mysql');
+                    return qv.post('/extension/storeinstance', { extensionId: 'mysql', instanceId: timestamp, data: self.form });
+                }
                 return Promise.resolve();
             })
             .catch(function (data) {
