@@ -1,0 +1,287 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: rgb(30,30,30);
+}
+
+a {
+    cursor: pointer;
+}
+
+.pomelo-statusbar {
+    position: fixed;
+    height: 25px;
+    width: 100%;
+    background: rgb(0,124,202);
+    bottom: 0;
+    color: #fff;
+    font-size: 12px;
+    line-height: 25px;
+    padding: 0 15px;
+}
+
+.pomelo-instance-tab {
+    background: rgb(60,60,60);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 50px;
+    bottom: 25px;
+}
+
+.pomelo-instance-menu {
+    left: 50px;
+    width: 250px;
+    top: 0;
+    position: fixed;
+    background: rgb(37,37,38);
+    bottom: 25px;
+    color: #ccc;
+}
+
+.pomelo-instance-tab-item {
+    display: block;
+    text-align: center;
+    font-size: 24px;
+    line-height: 50px;
+    color: #fff;
+    fill: #fff;
+    margin-bottom: 5px;
+    border-left: 3px solid rgba(0,0,0,0);
+    opacity: 0.6;
+    height: 50px;
+}
+
+    .pomelo-instance-tab-item:hover,
+    .pomelo-instance-tab-item.active {
+        opacity: 1;
+    }
+
+    .pomelo-instance-tab-item.active {
+        border-color: #fff;
+    }
+
+.pomelo-instance-main {
+    color: #d4d4d4;
+    position: fixed;
+    left: 300px;
+    bottom: 25px;
+    top: 0;
+    right: 0;
+}
+
+.pomelo-instance-main-padding {
+    padding: 15px;
+}
+
+.pomelo-new-connection-menu-title {
+    background: rgb(56,56,56);
+    color: rgb(204,204,204);
+    font-size: 12px;
+    font-weight: bold;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 15px;
+}
+
+.pomelo-new-connection-menu-item {
+    height: 50px;
+    padding: 15px;
+    display: block;
+}
+
+    .pomelo-new-connection-menu-item svg {
+        width: 50px;
+        height: 50px;
+        float: left;
+        border-radius: 5px;
+        margin-right: 10px;
+        fill: #ccc;
+    }
+
+.pomelo-new-connection-menu-item-provider {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.pomelo-new-connection-menu-item-description {
+    font-size: 10px;
+}
+
+.pomelo-new-connection-menu-item:hover,
+.pomelo-new-connection-menu-item.active {
+    background: rgb(42,45,46);
+}
+
+.textbox, .dropdown {
+    width: calc(100% - 12px);
+    background: rgb(60,60,60);
+    outline: 0;
+    border: 1px solid rgb(60,60,60);
+    color: rgb(156,166,156);
+    line-height: 24px;
+    font-size: 14px;
+    padding: 0 5px;
+    height: 24px;
+}
+
+.dropdown {
+    height: 26px;
+}
+
+    .textbox:focus, .dropdown:focus {
+        border-color: rgb(0,124,202);
+    }
+
+.form-section {
+    margin-bottom: 15px;
+}
+
+.button {
+    background: rgb(14,99,156);
+    line-height: 35px;
+    height: 35px;
+    padding: 0 15px;
+    color: #fff;
+    font-size: 14px;
+    border: none;
+}
+
+    .button:hover {
+        background: rgb(17,119,187);
+    }
+
+    .button.disabled {
+        background: rgb(28,62,85);
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+.pomelo-instance-menu-drag {
+    z-index: 10000;
+    width: 3px;
+    position: fixed;
+    background: none;
+    cursor: col-resize;
+    top: 0;
+    bottom: 25px;
+    left: 297px;
+}
+
+.pomelo-instance-tab-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 5px;
+    fill: #fff;
+    stroke-width: 10;
+    stroke: #fff;
+    margin: 9px 6px 9px 9px;
+}
+
+.pomelo-new-connection-menu-toggle {
+    line-height: 30px !important;
+    float: right;
+    text-align: center;
+}
+
+.pomelo-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+    .pomelo-table th {
+        text-align: left;
+    }
+
+    .pomelo-table td,
+    .pomelo-table th {
+        padding: 8px 10px;
+        white-space: nowrap;
+        border-left: 1px solid rgba(0,0,0,0);
+        border-right: 1px solid rgba(0,0,0,0);
+    }
+
+    .pomelo-table tr {
+        border-bottom: 1px solid #444;
+    }
+
+        .pomelo-table tr:hover {
+            background: rgb(42,45,46);
+        }
+
+.pomelo-table-outer {
+    overflow: auto;
+}
+
+::-webkit-scrollbar {
+    background: rgb(30,30,30);
+    border: 1px solid rgb(50,50,50);
+    height: 18px;
+    width: 18px;
+}
+
+::-webkit-scrollbar-corner {
+    background: rgb(30,30,30);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(79,79,79);
+}
+
+.pomelo-table-textbox {
+    background: none;
+    border: none;
+    color: inherit;
+    padding: 8px 10px;
+    border: 1px solid rgba(0,0,0,0);
+    margin: -8px -10px;
+    width: calc(100% - 2px);
+}
+
+    .pomelo-table-textbox.dirty {
+        border-color: rgb(104,33,122);
+        background: rgba(104, 33, 122, 0.3);
+    }
+
+    .pomelo-table-textbox.selected {
+        border-color: rgb(0,124,202);
+        background: rgba(0,124,202, 0.3);
+    }
+
+.pomelo-table.hover-display-border:hover td,
+.pomelo-table.hover-display-border:hover th {
+    border-left-color: #444;
+    border-right-color: #444;
+}
+
+tr.new-record {
+    background: rgba(0,124,202,0.4);
+}
+
+.pomelo-toggle-menu {
+    position: fixed;
+    padding: 10px 20px;
+    background: rgb(37,37,38);
+    box-shadow: 0 0 8px rgba(0,0,0,0.4);
+    font-size: 12px;
+}
+
+.pomelo-toggle-menu-split {
+    height: 1px;
+    border: none;
+    border-top: 1px solid rgb(97,97,98);
+    margin-left: -15px;
+    margin-right: -15px;
+}
+
+.pomelo-toggle-menu a {
+    display: block;
+    margin: 0 -20px;
+    padding: 0 25px;
+    line-height: 25px;
+}
+
+.pomelo-toggle-menu a:hover {
+    background: rgb(9,71,113);
+    color: #fff;
+}

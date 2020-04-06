@@ -1,0 +1,123 @@
+﻿@model List<List<string>>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no,user-scalable=no">
+    <link href="/assets/css/pomelo.css" rel="stylesheet" />
+    <link href="/assets/css/font-awesome.css" rel="stylesheet" />
+
+    <script>
+        window.nodeRequire = require;
+        delete window.require;
+        delete window.exports;
+        delete window.module;
+    </script>
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/i18n.js"></script>
+    <script src="/assets/js/vue.js"></script>
+    <script src="/assets/js/pomelo.queryview.js"></script>
+    <title>Pomelo</title>
+    <style>
+        #editor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 55px;
+            overflow: auto;
+            background: rgb(37, 37, 38);
+        }
+
+        #buttons {
+            position: fixed;
+            height: 35px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 10px;
+        }
+
+        .button {
+            height: 35px;
+            line-height: 35px;
+            display: inline-block;
+        }
+
+        .editor-group {
+            display: inline-flex;
+            margin-right: 15px;
+        }
+
+        #editor-group-outer {
+            padding: 15px 0 15px 15px;
+        }
+
+        .editor-cell {
+            font-size: 14px;
+            line-height: 30px;
+            height: 30px;
+            width: 20px;
+            background: none;
+            outline: 0;
+            border: none;
+            color: rgb(200,200,200);
+            padding: 0 5px;
+            text-align: center;
+        }
+
+            .editor-cell:hover, .editor-cell:focus {
+                background: rgb(30,30,30);
+            }
+    </style>
+</head>
+<body>
+    <div id="editor">
+        <div id="editor-group-outer">
+            @foreach (var x in Model)
+            {
+            <div class="editor-group">
+                @foreach (var y in x)
+                {
+                    <input type="text" class="editor-cell" value="@y" />
+                }
+            </div>
+            }
+            @if (Model.Count == 0)
+            { 
+                <div class="editor-group"></div>
+            }
+        </div>
+        <div id="buttons">
+            <a class="button" id="btn-save">Save</a>
+            <a class="button" id="btn-append">Append Byte</a>
+        </div>
+    </div>
+    <script>
+        $('#btn-append').click(function () {
+            var last = $($('.editor-group')[$('.editor-group').length - 1]);
+            if (last.find('input').length == 8) {
+                last = $('<div class="editor-group"></div>');
+                last.appendTo($('#editor-group-outer'));
+            }
+            var item = $('<input type="text" class="editor-cell" />');
+            item.appendTo(last);
+            item.focus();
+        });
+        var id = '@ViewContext.RouteData.Values["key"]';
+        $('#btn-save').click(function () {
+            var doms = $('.editor-cell');
+            var data = [];
+            for (var i = 0; i < doms.length; ++i) {
+                data.push($(doms[i]).val());
+            }
+            qv.post('/mysql/editor/hex/' + id, { data: data })
+                .then(() => {
+                    var remote = window.nodeRequire('electron').remote;
+                    remote.getCurrentWindow().close();
+                });
+        });
+    </script>
+</body>
+</html>
