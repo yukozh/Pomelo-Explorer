@@ -1,0 +1,27 @@
+﻿<div>
+    <div class="pomelo-mysql-table-toolbar" ref="toolbar">
+        <a class="pomelo-mysql-table-toolbar-item" v-on:click="$root.open('view-view', { instance: instance, database: database, table: selected }, selected)">
+            <i class="fa fa-folder-open-o"></i> Open
+        </a>
+        <a class="pomelo-mysql-table-toolbar-item">
+            <i class="fa fa-trash-o"></i> Delete
+        </a>
+        <a class="pomelo-mysql-table-toolbar-item">
+            <i class="fa fa-plus-square-o"></i> New View
+        </a>
+    </div>
+    <div class="pomelo-table-outer pomelo-mysql-table-list" v-bind:style="{ 'height': tableHeight }">
+        <table class="pomelo-table">
+            <thead>
+                <tr>
+                    <th>View</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(x, i) in items" v-on:click="selected = x" v-bind:class="{ 'active': selected === x }">
+                    <td><i class="fa fa-table"></i> {{ x }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

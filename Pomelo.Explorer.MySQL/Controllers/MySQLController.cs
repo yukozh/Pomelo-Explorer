@@ -95,7 +95,7 @@ namespace Pomelo.Explorer.MySQL.Controllers
         public async Task<IActionResult> GetTables(string id, string database)
         {
             var conn = ConnectionHelper.Connections[id];
-            using (var command = new MySqlCommand($"SHOW TABLES IN `{database}`;", ConnectionHelper.Connections[id]))
+            using (var command = new MySqlCommand($"SHOW TABLE STATUS FROM `{database}` WHERE `Comment` <> 'VIEW';", ConnectionHelper.Connections[id]))
             {
                 await conn.EnsureOpenedAsync();
                 var result = new List<TableInfo>();
@@ -105,12 +105,12 @@ namespace Pomelo.Explorer.MySQL.Controllers
                     {
                         result.Add(new TableInfo 
                         {
-                            Name = reader[0].ToString(),
+                            Name = reader["Name"].ToString(),
                             Charset = "utf8mb4",
-                            Collate = "utf8mb4_general-ci",
+                            Collate = reader["Collation"].ToString(),
                             Columns = 0,
-                            Records = 0,
-                            Engine = "InnoDB"
+                            Records = Convert.ToInt64(reader["Rows"]),
+                            Engine = reader["Engine"].ToString()
                         });
                     }
                 }
@@ -226,6 +226,25 @@ namespace Pomelo.Explorer.MySQL.Controllers
                 }
                 await conn.EnsureOpenedAsync();
                 return Json(await command.ExecuteNonQueryAsync());
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetViews(string id, string database)
+        {
+            var conn = ConnectionHelper.Connections[id];
+            using (var command = new MySqlCommand($"SHOW FULL TABLES FROM `{database}` WHERE `Table_type` = 'VIEW';", ConnectionHelper.Connections[id]))
+            {
+                await conn.EnsureOpenedAsync();
+                var result = new List<string>();
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        result.Add(reader[0].ToString());
+                    }
+                }
+                return Json(result);
             }
         }
     }

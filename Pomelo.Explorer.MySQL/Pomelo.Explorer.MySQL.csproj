@@ -24,6 +24,11 @@
     <None Remove="Resource\browse\table.css" />
     <None Remove="Resource\browse\table.html" />
     <None Remove="Resource\browse\table.js" />
+    <None Remove="Resource\browse\view-list.html" />
+    <None Remove="Resource\browse\view-list.js" />
+    <None Remove="Resource\browse\view.css" />
+    <None Remove="Resource\browse\view.html" />
+    <None Remove="Resource\browse\view.js" />
     <None Remove="Resource\create\index.css" />
     <None Remove="Resource\create\index.html" />
     <None Remove="Resource\create\index.js" />
