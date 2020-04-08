@@ -6,6 +6,7 @@ component.created = function () {
 
 component.data = function () {
     return {
+        isView: false,
         instance: null,
         database: null,
         table: null,

@@ -1,6 +1,6 @@
 ﻿<div>
     <div class="pomelo-mysql-table-toolbar" ref="toolbar">
-        <a class="pomelo-mysql-table-toolbar-item" v-on:click="$root.open('view-view', { instance: instance, database: database, table: selected }, selected)">
+        <a class="pomelo-mysql-table-toolbar-item" v-on:click="$root.open('table-view', { instance: instance, database: database, table: selected, isView: true }, selected)">
             <i class="fa fa-folder-open-o"></i> Open
         </a>
         <a class="pomelo-mysql-table-toolbar-item">

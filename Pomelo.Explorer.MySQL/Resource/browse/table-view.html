@@ -6,7 +6,7 @@
         <a class="pomelo-mysql-table-toolbar-item" v-on:click="discard">
             <i class="fa fa-rotate-left"></i> Discard
         </a>
-        <a class="pomelo-mysql-table-toolbar-item" v-on:click="newRow">
+        <a class="pomelo-mysql-table-toolbar-item" v-on:click="newRow" v-if="!isView">
             <i class="fa fa-plus"></i> New
         </a>
         <a class="pomelo-mysql-table-toolbar-item">
