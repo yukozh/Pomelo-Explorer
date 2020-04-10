@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Reflection;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 using Pomelo.Explorer.Definitions;
@@ -16,7 +17,7 @@ namespace Pomelo.Explorer.MySQL.Controllers
         [HttpPost]
         public IActionResult CreateConnection([FromBody]CreateConnectionRequest request)
         {
-            var client = new MySqlConnection($"Server={request.Address}; Port={request.Port}; Uid={request.Username}; Pwd={request.Password}; Pooling=False");
+            var client = new MySqlConnection($"Server={request.Address}; Port={request.Port}; Uid={request.Username}; Pwd={request.Password}; Pooling=False; AllowUserVariables=True;");
             var timestamp = DateTime.UtcNow.Ticks.ToString();
             ConnectionHelper.Connections.Add(timestamp, client);
             return Json(new CreateConnectionResponse 
@@ -53,7 +54,7 @@ namespace Pomelo.Explorer.MySQL.Controllers
         [HttpPost]
         public async Task<IActionResult> TestConnection([FromBody]CreateConnectionRequest request)
         {
-            using (var client = new MySqlConnection($"Server={request.Address}; Port={request.Port}; Uid={request.Username}; Pwd={request.Password}; Pooling=False"))
+            using (var client = new MySqlConnection($"Server={request.Address}; Port={request.Port}; Uid={request.Username}; Pwd={request.Password}; Pooling=False; AllowUserVariables=True;"))
             {
                 try
                 {
@@ -229,6 +230,80 @@ namespace Pomelo.Explorer.MySQL.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult ExecuteResult([FromRoute]string id, [FromBody]ExecuteSqlRequest request)
+        {
+            var conn = ConnectionHelper.Connections[id];
+            var ret = new List<MySqlQueryResult>();
+            var splitedCommands = MySqlCommandSpliter.SplitCommand(request.Sql);
+            using (var command = new MySqlCommand())
+            {
+                command.Connection = conn;
+                foreach (var x in splitedCommands)
+                {
+                    var res = new MySqlQueryResult();
+                    res.Command = x;
+                    var analyze = MySqlCommandSpliter.AnalyzeCommand(x);
+                    res.Table = analyze.Table;
+                    command.CommandText = x;
+                    var begin = DateTime.Now;
+                    var tableColumns = MySqlCommandSpliter.GetTableColumns(res.Table, conn);
+                    res.Readonly = !(analyze.IsSimpleSelect && MySqlCommandSpliter.IsContainedKeys(res.Columns, tableColumns));
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (res.Readonly)
+                        {
+                            res.Columns = GenerateColumnsFromReader(reader);
+                            res.ColumnTypes = null;
+                            res.Nullable = null;
+                            res.Keys = null;
+                            res.RowsAffected = reader.RecordsAffected;
+                        }
+                        else
+                        {
+                            res.Columns = analyze.Columns;
+                            if (res.Columns.Count() == 1 && res.Columns.First() == "*")
+                            {
+                                res.Columns = tableColumns.Select(x => x.Field);
+                            }
+                            res.ColumnTypes = res.Columns.Select(x => tableColumns.SingleOrDefault(y => y.Field == x)?.Type);
+                            res.Nullable = res.Columns.Select(x => tableColumns.SingleOrDefault(y => y.Field == x)?.Null);
+                            res.Keys = tableColumns.Where(x => x.Key == "PRI").Select(x => x.Field);
+                            res.RowsAffected = reader.RecordsAffected;
+                        }
+                        if (reader.HasRows)
+                        {
+                            res.Rows = new List<List<string>>();
+                            while (reader.Read())
+                            {
+                                var row = new List<string>();
+                                for (var i = 0; i < reader.FieldCount; ++i)
+                                {
+                                    if (reader.IsDBNull(i))
+                                    {
+                                        row.Add(null);
+                                    }
+                                    else if (reader.GetFieldType(i) == typeof(byte[]))
+                                    {
+                                        row.Add(Convert.ToBase64String((byte[])reader[i]));
+                                    }
+                                    else
+                                    {
+                                        row.Add(reader[i].ToString());
+                                    }
+                                }
+                                res.Rows.Add(row);
+                            }
+                        }
+                    }
+                    var end = DateTime.Now;
+                    res.TimeSpan = Convert.ToInt64((begin - end).TotalMilliseconds);
+                    ret.Add(res);
+                }
+            }
+            return Json(ret);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetViews(string id, string database)
         {
@@ -245,6 +320,14 @@ namespace Pomelo.Explorer.MySQL.Controllers
                     }
                 }
                 return Json(result);
+            }
+        }
+
+        private IEnumerable<string> GenerateColumnsFromReader(MySqlDataReader reader)
+        {
+            for (var i = 0; i < reader.FieldCount; ++i)
+            {
+                yield return reader.GetName(i);
             }
         }
     }
