@@ -35,3 +35,8 @@
 .pomelo-mysql-menu-database i {
     width: 15px;
 }
+
+.pomelo-mysql-menu-db-submenu-item.sub-active {
+    background: rgb(9, 71, 113);
+    color: #fff;
+}

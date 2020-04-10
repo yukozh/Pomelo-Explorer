@@ -6,17 +6,17 @@
             <i class="pomelo-new-connection-menu-toggle fa" v-bind:class="{ 'fa-chevron-down': toggled[i], 'fa-chevron-right': !toggled[i] }"></i>
         </a>
         <div class="pomelo-mysql-menu-db-submenu" v-show="!!toggled[i]">
-            <a class="pomelo-mysql-menu-db-submenu-item" v-on:click="$root.open('/static/mysql/Resource/browse/table', { instance: id, database: x })">
+            <a v-bind:class="{ 'sub-active': active === 'tables-' + x }" class="pomelo-mysql-menu-db-submenu-item" v-on:click="active = 'tables-' + x; $root.open('/static/mysql/Resource/browse/table', { instance: id, database: x })">
                 <i class="fa fa-table"></i> Tables
             </a>
-            <a class="pomelo-mysql-menu-db-submenu-item"  v-on:click="$root.open('/static/mysql/Resource/browse/view', { instance: id, database: x })">
+            <a v-bind:class="{ 'sub-active': active === 'views-' + x }" class="pomelo-mysql-menu-db-submenu-item" v-on:click="active = 'views-' + x; $root.open('/static/mysql/Resource/browse/view', { instance: id, database: x })">
                 <i class="fa fa-search"></i> Views
             </a>
             <a class="pomelo-mysql-menu-db-submenu-item">
                 <i class="fa fa-code"></i> Functions
             </a>
-            <a class="pomelo-mysql-menu-db-submenu-item">
-                <i class="fa fa-terminal"></i> Query
+            <a v-bind:class="{ 'sub-active': active === 'queries-' + x }" class="pomelo-mysql-menu-db-submenu-item" v-on:click="active = 'queries-' + x; $root.open('/static/mysql/Resource/browse/query', { instance: id, database: x })">
+                <i class="fa fa-terminal"></i> Queries
             </a>
             <a class="pomelo-mysql-menu-db-submenu-item">
                 <i class="fa fa-files-o"></i> Backups

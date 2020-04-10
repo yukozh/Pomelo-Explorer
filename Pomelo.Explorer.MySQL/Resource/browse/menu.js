@@ -15,6 +15,7 @@ component.data = function () {
         id: null,
         databases: [],
         tables: {},
+        active: null
     };
 };
 
