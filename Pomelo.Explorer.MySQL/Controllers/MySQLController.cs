@@ -228,7 +228,19 @@ namespace Pomelo.Explorer.MySQL.Controllers
                         command.Parameters.Add(param);
                     }
                 }
-                await conn.EnsureOpenedAsync();
+                try
+                {
+                    await conn.EnsureOpenedAsync();
+                }
+                catch (MySqlException ex)
+                {
+                    Response.StatusCode = 400;
+                    return Json(new DBError
+                    {
+                        Code = ex.Number,
+                        Message = ex.Message
+                    });
+                }
                 return Json(await command.ExecuteNonQueryAsync());
             }
         }
@@ -243,7 +255,19 @@ namespace Pomelo.Explorer.MySQL.Controllers
             {
                 command.Connection = conn;
                 command.CommandText = $"USE `{request.Database}`;";
-                command.ExecuteNonQuery();
+                try 
+                { 
+                    command.ExecuteNonQuery();
+                }
+                catch (MySqlException ex)
+                {
+                    Response.StatusCode = 400;
+                    return Json(new DBError
+                    {
+                        Code = ex.Number,
+                        Message = ex.Message
+                    });
+                }
                 foreach (var x in splitedCommands)
                 {
                     var res = new MySqlQueryResult();
@@ -262,56 +286,68 @@ namespace Pomelo.Explorer.MySQL.Controllers
                     {
                         res.Readonly = true;
                     }
-                    using (var reader = command.ExecuteReader())
+                    try
                     {
-                        if (res.Readonly)
+                        using (var reader = command.ExecuteReader())
                         {
-                            res.Columns = GenerateColumnsFromReader(reader).ToList();
-                            res.ColumnTypes = null;
-                            res.Nullable = null;
-                            res.Keys = null;
-                            res.RowsAffected = reader.RecordsAffected;
-                        }
-                        else
-                        {
-                            res.Columns = analyze.Columns;
-                            if (res.Columns.Count() == 1 && res.Columns.First() == "*")
+                            if (res.Readonly)
                             {
-                                res.Columns = tableColumns.Select(x => x.Field);
+                                res.Columns = GenerateColumnsFromReader(reader).ToList();
+                                res.ColumnTypes = null;
+                                res.Nullable = null;
+                                res.Keys = null;
+                                res.RowsAffected = reader.RecordsAffected;
                             }
                             else
                             {
                                 res.Columns = analyze.Columns;
-                            }
-                            res.ColumnTypes = res.Columns.Select(x => tableColumns.SingleOrDefault(y => y.Field == x)?.Type);
-                            res.Nullable = res.Columns.Select(x => tableColumns.SingleOrDefault(y => y.Field == x)?.Null);
-                            res.Keys = tableColumns.Where(x => x.Key == "PRI").Select(x => x.Field);
-                            res.RowsAffected = reader.RecordsAffected;
-                        }
-                        if (reader.HasRows)
-                        {
-                            res.Rows = new List<List<string>>();
-                            while (reader.Read())
-                            {
-                                var row = new List<string>();
-                                for (var i = 0; i < reader.FieldCount; ++i)
+                                if (res.Columns.Count() == 1 && res.Columns.First() == "*")
                                 {
-                                    if (reader.IsDBNull(i))
-                                    {
-                                        row.Add(null);
-                                    }
-                                    else if (reader.GetFieldType(i) == typeof(byte[]))
-                                    {
-                                        row.Add(Convert.ToBase64String((byte[])reader[i]));
-                                    }
-                                    else
-                                    {
-                                        row.Add(reader[i].ToString());
-                                    }
+                                    res.Columns = tableColumns.Select(x => x.Field);
                                 }
-                                res.Rows.Add(row);
+                                else
+                                {
+                                    res.Columns = analyze.Columns;
+                                }
+                                res.ColumnTypes = res.Columns.Select(x => tableColumns.SingleOrDefault(y => y.Field == x)?.Type);
+                                res.Nullable = res.Columns.Select(x => tableColumns.SingleOrDefault(y => y.Field == x)?.Null);
+                                res.Keys = tableColumns.Where(x => x.Key == "PRI").Select(x => x.Field);
+                                res.RowsAffected = reader.RecordsAffected;
+                            }
+                            if (reader.HasRows)
+                            {
+                                res.Rows = new List<List<string>>();
+                                while (reader.Read())
+                                {
+                                    var row = new List<string>();
+                                    for (var i = 0; i < reader.FieldCount; ++i)
+                                    {
+                                        if (reader.IsDBNull(i))
+                                        {
+                                            row.Add(null);
+                                        }
+                                        else if (reader.GetFieldType(i) == typeof(byte[]))
+                                        {
+                                            row.Add(Convert.ToBase64String((byte[])reader[i]));
+                                        }
+                                        else
+                                        {
+                                            row.Add(reader[i].ToString());
+                                        }
+                                    }
+                                    res.Rows.Add(row);
+                                }
                             }
                         }
+                    }
+                    catch (MySqlException ex)
+                    {
+                        Response.StatusCode = 400;
+                        return Json(new DBError
+                        {
+                            Code = ex.Number,
+                            Message = ex.Message
+                        });
                     }
                     var end = DateTime.Now;
                     res.TimeSpan = Convert.ToInt64((end - begin).TotalMilliseconds);

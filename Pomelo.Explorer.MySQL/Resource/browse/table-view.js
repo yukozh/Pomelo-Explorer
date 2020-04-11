@@ -56,6 +56,10 @@ component.methods = {
                 // TODO: Update status bar, clean dirty
                 self.cleanDirty();
                 alert('OK');
+            })
+            .catch(function (data) {
+                app.dialog('error', 'MySQL Error', data.responseJSON.code + ' - ' + data.responseJSON.message);
+                return Promise.resolve();
             });
     },
     getTable: function (params) {

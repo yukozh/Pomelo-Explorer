@@ -70,6 +70,10 @@ component.methods = {
                     self.opened.push({ id: id, params: params });
                     self.active = id;
                 }
+            })
+            .catch(function (data) {
+                app.dialog('error', 'MySQL Error', data.responseJSON.code + ' - ' + data.responseJSON.message);
+                return Promise.resolve();
             });
     },
     reset: function () {
