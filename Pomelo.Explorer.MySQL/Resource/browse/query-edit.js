@@ -66,9 +66,8 @@ component.methods = {
                     }
                     vm.$forceUpdate();
 
-                    var id = self.$cont.toQueryString('/static/mysql/Resource/browse/table-view', params);
-                    self.opened.push({ id: id, params: params });
-                    self.active = id;
+                    self.opened.push({ id: vm.$identity, params: params });
+                    self.active = vm.$identity;
                 }
             })
             .catch(function (data) {
