@@ -8,7 +8,7 @@ namespace Pomelo.Explorer.MySQL
     {
         public static void EnsureOpened(this MySqlConnection conn)
         {
-            if (conn.State == System.Data.ConnectionState.Closed)
+            if (conn.State != System.Data.ConnectionState.Open)
             {
                 conn.Open();
             }
