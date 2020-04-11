@@ -19,6 +19,6 @@ component.created = function () {
     this.getExtensionList();
 };
 
-component.active = function () {
+component.reactive = function () {
     app.active = 'new-connection';
 };

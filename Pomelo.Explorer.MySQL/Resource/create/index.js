@@ -7,7 +7,8 @@ component.data = function () {
             port: 3306,
             ssl: 'None',
             username: null,
-            password: null
+            password: null,
+            instanceId: null
         },
         working: false
     };
@@ -15,10 +16,12 @@ component.data = function () {
 
 component.methods = {
     connect: function (instance) {
-        console.warn(instance);
         var self = this;
         self.working = true;
         var reopen = instance && typeof (instance) == 'string';
+        if (reopen) {
+            self.form.instanceId = instance;
+        }
         var timestamp = instance;
         qv.post('/mysql/createconnection', self.form)
             .then(function (data) {
@@ -29,8 +32,8 @@ component.methods = {
                 return qv.post('/mysql/openconnection/' + data.id, { });
             })
             .then(function () {
+                app.openInstance(timestamp, 'mysql');
                 if (!reopen) {
-                    app.openInstance(timestamp, 'mysql');
                     return qv.post('/extension/storeinstance', { extensionId: 'mysql', instanceId: timestamp, data: self.form });
                 }
                 return Promise.resolve();

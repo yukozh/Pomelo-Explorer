@@ -48,8 +48,8 @@ var PomeloComponentContainer = function (el, root, onActive, onViewOpen) {
                     $(el).append('<div id="vm-' + random + '"></div>');
                     vm.$root = root;
                     vm.$parent = root;
-                    if (vm.active) {
-                        var p = vm.active();
+                    if (vm.reactive) {
+                        var p = vm.reactive();
                         if (p instanceof Promise) {
                             await p;
                         }
@@ -58,8 +58,8 @@ var PomeloComponentContainer = function (el, root, onActive, onViewOpen) {
                     vm.$identity = qs;
                     vm.$pomelo = this;
                 } else {
-                    if (this.instance[qs].active) {
-                        var p = this.instance[qs].active();
+                    if (this.instance[qs].reactive && typeof (this.instance[qs].reactive) === 'function') {
+                        var p = this.instance[qs].reactive();
                         if (p instanceof Promise) {
                             await p;
                         }
@@ -121,7 +121,7 @@ var PomeloComponentContainer = function (el, root, onActive, onViewOpen) {
             });
             var Com = Vue.component(self.toSafeName(view), component);
             var ret = new Com();
-            ret.active = component.active;
+            ret.reactive = component.reactive;
             return ret;
         },
         addCreatedFunction: function (component, view, func) {
@@ -137,11 +137,11 @@ var PomeloComponentContainer = function (el, root, onActive, onViewOpen) {
             };
         },
         addActiveFunction: function (component, view, func) {
-            if (component.active === undefined) {
-                component.active = function () { };
+            if (component.reactive === undefined) {
+                component.reactive = function () { };
             }
-            var origin = component.active;
-            component.active = function () {
+            var origin = component.reactive;
+            component.reactive = function () {
                 origin.call(this);
                 if (func) {
                     return func.call(this, view, component);

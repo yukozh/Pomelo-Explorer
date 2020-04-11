@@ -42,10 +42,16 @@ var app = new Vue({
             app.$menu.open(view, params);
         },
         openInstance: function (id, provider) {
+            var instances = this.tab.instances.filter(x => x.id === id && x.provider === provider && x.func);
+            if (instances.length > 0) {
+                instances[0].func();
+                instances[0].func = null;
+            } else {
+                var view = '/static/' + provider + this.extensions.filter(x => x.id === provider)[0].browse;
+                app.$main.open();
+                app.$menu.open(view, { id: id });
+            }
             this.active = 'instance-' + id;
-            var view = '/static/' + provider + this.extensions.filter(x => x.id === provider)[0].browse;
-            app.$main.open();
-            app.$menu.open(view, { id: id });
         },
         useMenu: function (menu) {
             appBuilder.loadMenu(menu);
@@ -62,10 +68,14 @@ var app = new Vue({
         dialog: function (icon, title, message) {
             qv.post('/dialog/show', { icon: icon, title: title, message: message });
         },
-        pushInstance: function (id, provider) {
+        pushInstance: function (id, provider, func) {
+            if (this.tab.instances.some(x => x.id === id && x.provider === provider)) {
+                return;
+            }
             this.tab.instances.push({
                 id: id,
-                provider: provider
+                provider: provider,
+                func: func
             });
         },
         popInstance: function (id) {
@@ -78,22 +88,25 @@ var app = new Vue({
                     self.extensions = data;
                 });
         },
-        buildOpenComponent: async function (extid, instanceid, data) {
-            var tmp = this.extensions.filter(x => x.id === extid);
-            if (tmp.length === 0) {
-                return;
-            }
-            var jsUrl = '/static/' + tmp[0].id + tmp[0].create;
-            var js = await app.$main.getScript(jsUrl);
-            var component = {};
-            eval(js);
-            component.form = data;
-            component.methods.connect.call(component, instanceid);
+        buildOpenComponent: function (extid, instanceid, data) {
+            var self = this;
+            var func = async function () {
+                var tmp = self.extensions.filter(x => x.id === extid);
+                if (tmp.length === 0) {
+                    return;
+                }
+                var jsUrl = '/static/' + tmp[0].id + tmp[0].create;
+                var js = await app.$main.getScript(jsUrl);
+                var component = {};
+                eval(js);
+                component.form = data;
+                component.methods.connect.call(component, instanceid);
+            };
+            this.pushInstance(instanceid, extid, func);
         },
         loadStoredInstances: async function () {
             var instances = await qv.get('/extension/instance', {});
             for (var i = 0; i < instances.length; ++i) {
-                console.log(instances[i].id);
                 if (this.tab.instances.some(x => x.id === instances[i].instanceId)) {
                     return;
                 }

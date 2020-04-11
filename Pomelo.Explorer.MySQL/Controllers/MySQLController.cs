@@ -18,11 +18,14 @@ namespace Pomelo.Explorer.MySQL.Controllers
         public IActionResult CreateConnection([FromBody]CreateConnectionRequest request)
         {
             var client = new MySqlConnection($"Server={request.Address}; Port={request.Port}; Uid={request.Username}; Pwd={request.Password}; Pooling=False; AllowUserVariables=True;");
-            var timestamp = DateTime.UtcNow.Ticks.ToString();
-            ConnectionHelper.Connections.Add(timestamp, client);
+            if (string.IsNullOrEmpty(request.InstanceId))
+            { 
+                request.InstanceId = DateTime.UtcNow.Ticks.ToString();
+            }
+            ConnectionHelper.Connections.Add(request.InstanceId, client);
             return Json(new CreateConnectionResponse 
             {
-                Id = timestamp
+                Id = request.InstanceId
             });
         }
 

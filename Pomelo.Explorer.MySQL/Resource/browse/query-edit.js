@@ -16,7 +16,9 @@ component.data = function () {
     return {
         instance: null,
         database: null,
-        timestamp: new Date().getTime()
+        timestamp: new Date().getTime(),
+        opened: [],
+        active: null
     };
 };
 
@@ -44,8 +46,9 @@ component.methods = {
         var sql = $(domId)[0].editor.getValue();
         qv.post('/mysql/executeresult/' + self.instance, { database: self.database, sql: sql })
             .then(async data => {
-                for (var i = 0; i < data.length; ++i) {
-                    var vm = await self.$cont.open('/static/mysql/Resource/browse/table-view', { instance: this.instance, database: this.database, isQuery: true });
+                for (let i = 0; i < data.length; ++i) {
+                    var params = { instance: self.instance, database: self.database, table: data[i].table, isQuery: true, timestamp: new Date().getTime() };
+                    var vm = await self.$cont.open('/static/mysql/Resource/browse/table-view', params);
                     vm.rows = data[i].rows;
                     var columns = [];
                     for (var j = 0; j < data[i].columns.length; ++j) {
@@ -58,12 +61,14 @@ component.methods = {
                     }
                     vm.columns = columns;
                     vm.origin = JSON.parse(JSON.stringify(data[i].rows));
-                    var status = [];
-                    for (var i = 0; i < vm.rows.length; ++i) {
-                        status[i] = 'plain';
+                    for (var k = 0; k < data[i].rows.length; ++k) {
+                        vm.$data.status.push('plain');
                     }
-                    vm.status = status;
                     vm.$forceUpdate();
+
+                    var id = self.$cont.toQueryString('/static/mysql/Resource/browse/table-view', params);
+                    self.opened.push({ id: id, params: params });
+                    self.active = id;
                 }
             });
     },
@@ -79,6 +84,37 @@ component.methods = {
             return (getWindowHeight() - this.$refs.toolbar.offsetHeight - this.$root.$refs.tabbar.offsetHeight - 25).toString() + 'px';
         } catch (ex) {
             return null;
+        }
+    },
+    open: function (params, e) {
+        if (e && $(e.target).hasClass('close')) {
+            return;
+        }
+        var url = '/static/mysql/Resource/browse/table-view';
+        var id = this.$cont.toQueryString(url, params);
+        if (this.opened.filter(x => x.id === id).length === 0) {
+            this.opened.push({ id: id, params: params});
+        }
+        this.active = id;
+        this.$cont.open(url, params);
+    },
+    destroy: function (id) {
+        this.$cont.closeById(id);
+        var rmIndex = 0;
+        for (var i = 0; i < this.opened.length; ++i) {
+            if (this.opened[i].id === id) {
+                this.opened.splice(i, 1);
+                rmIndex = i;
+                break;
+            }
+        }
+
+        if (this.opened.length > 0) {
+            --rmIndex;
+            if (rmIndex < 0) {
+                rmIndex = 0;
+            }
+            this.$cont.reactive(this.opened[rmIndex].id);
         }
     }
 };
