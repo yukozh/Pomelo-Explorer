@@ -18,6 +18,8 @@ component.data = function () {
         origin: [],
         status: [],
         columns: [],
+        executeTime: null,
+        rowsAffected: null,
         page: 0,
         showEditMenu: false,
         selected: {

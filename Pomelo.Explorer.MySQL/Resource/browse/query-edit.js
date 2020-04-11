@@ -47,16 +47,16 @@ component.methods = {
         qv.post('/mysql/executeresult/' + self.instance, { database: self.database, sql: sql })
             .then(async data => {
                 for (let i = 0; i < data.length; ++i) {
-                    var params = { instance: self.instance, database: self.database, table: data[i].table, isQuery: true, timestamp: new Date().getTime() };
+                    var params = { instance: self.instance, database: self.database, table: data[i].table, isQuery: true, readonly: data[i].readonly, timeExecuted: data[i].timeSpan, rowsAffected: data[i].rowsAffected, timestamp: new Date().getTime() };
                     var vm = await self.$cont.open('/static/mysql/Resource/browse/table-view', params);
                     vm.rows = data[i].rows;
                     var columns = [];
                     for (var j = 0; j < data[i].columns.length; ++j) {
                         var col = {};
-                        col.field = data[i].columns[j];
-                        col.type = data[i].columnTypes[j];
-                        col.null = data[i].nullable[j];
-                        col.key = data[i].keys.some(x => x === col.field) ? "PRI" : null;
+                        col.field = data[i].columns ? data[i].columns[j] : null;
+                        col.type = data[i].columnTypes ? data[i].columnTypes[j] : null;
+                        col.null = data[i].nullable ? data[i].nullable[j] : null;
+                        col.key = data[i].keys && data[i].keys.some(x => x === col.field) ? "PRI" : null;
                         columns.push(col);
                     }
                     vm.columns = columns;

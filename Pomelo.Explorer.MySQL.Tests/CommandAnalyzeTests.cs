@@ -88,5 +88,12 @@ namespace Pomelo.Explorer.MySQL.Tests
             var result = MySqlCommandSpliter.AnalyzeCommand("select count(1), `group` from user group by `group`");
             Assert.False(result.IsSimpleSelect);
         }
+
+        [Fact]
+        public void NonSelectTest()
+        {
+            var result = MySqlCommandSpliter.AnalyzeCommand("show tables;");
+            Assert.False(result.IsSimpleSelect);
+        }
     }
 }

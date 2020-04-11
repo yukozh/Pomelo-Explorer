@@ -32,7 +32,6 @@ namespace Pomelo.Explorer
             services.AddMvc().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                options.JsonSerializerOptions.IgnoreNullValues = true;
             });
             services.AddSingleton<IActionDescriptorChangeProvider>(PomeloActionDescriptorChangeProvider.Instance);
             services.AddSingleton(PomeloActionDescriptorChangeProvider.Instance);

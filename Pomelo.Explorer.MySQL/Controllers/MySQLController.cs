@@ -252,8 +252,16 @@ namespace Pomelo.Explorer.MySQL.Controllers
                     res.Table = analyze.Table;
                     command.CommandText = x;
                     var begin = DateTime.Now;
-                    var tableColumns = MySqlCommandSpliter.GetTableColumns(res.Table, conn).ToList();
-                    res.Readonly = !(analyze.IsSimpleSelect && MySqlCommandSpliter.IsContainedKeys(analyze.Columns, tableColumns));
+                    IEnumerable<MySQLTableColumn> tableColumns = null;
+                    try
+                    {
+                        tableColumns = MySqlCommandSpliter.GetTableColumns(res.Table, conn).ToList();
+                        res.Readonly = string.IsNullOrWhiteSpace(analyze.Table) || !(analyze.IsSimpleSelect && MySqlCommandSpliter.IsContainedKeys(analyze.Columns, tableColumns));
+                    }
+                    catch (MySqlException)
+                    {
+                        res.Readonly = true;
+                    }
                     using (var reader = command.ExecuteReader())
                     {
                         if (res.Readonly)
