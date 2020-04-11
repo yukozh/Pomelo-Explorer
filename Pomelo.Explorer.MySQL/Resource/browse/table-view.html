@@ -1,5 +1,5 @@
 ﻿<div>
-    <div class="pomelo-mysql-table-toolbar" ref="toolbar">
+    <div class="pomelo-mysql-table-toolbar" ref="toolbar" v-if="!readonly">
         <a v-on:click="save" class="pomelo-mysql-table-toolbar-item">
             <i class="fa fa-save"></i> Save
         </a>

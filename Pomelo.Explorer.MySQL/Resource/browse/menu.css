@@ -40,3 +40,15 @@
     background: rgb(9, 71, 113);
     color: #fff;
 }
+
+.ace_editor {
+    font-size: 14px;
+}
+
+.ace-monokai .ace_gutter {
+    background: rgb(46,46,46) !important;
+}
+
+.ace-monokai {
+    background: rgb(37,37,38) !important;
+}

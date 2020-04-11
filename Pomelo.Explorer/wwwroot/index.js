@@ -99,6 +99,11 @@ var app = new Vue({
                 }
                 this.buildOpenComponent(instances[i].extensionId, instances[i].instanceId, instances[i].data);
             }
+        },
+        loadModule: function (url) {
+            if ($('script[src="' + url + '"]').length === 0) {
+                $('head').append('<script src="' + url + '"></script>');
+            }
         }
     },
     mounted: function () {

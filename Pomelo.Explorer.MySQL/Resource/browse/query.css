@@ -56,6 +56,11 @@
     color: #fff;
 }
 
+    .pomelo-mysql-tabbar-item.minor {
+        background: rgb(9, 71, 113);
+        color: #fff;
+    }
+
 .pomelo-mysql-tabbar-item i {
     width: 15px;
 }
@@ -69,3 +74,7 @@
     .pomelo-mysql-tabbar-item:hover .close {
         visibility: visible;
     }
+
+.pomelo-query-editor {
+    height: 120px;
+}

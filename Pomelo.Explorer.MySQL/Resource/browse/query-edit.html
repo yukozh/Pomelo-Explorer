@@ -1,0 +1,18 @@
+﻿<div>
+    <div class="pomelo-mysql-table-toolbar" ref="toolbar">
+        <a v-on:click="execute" class="pomelo-mysql-table-toolbar-item">
+            <i class="fa fa-play"></i> Execute
+        </a>
+        <a class="pomelo-mysql-table-toolbar-item" v-on:click="reset">
+            <i class="fa fa-undo"></i> Reset
+        </a>
+    </div>
+    <div class="pomelo-query-editor" v-bind:id="'editor-' + timestamp"></div>
+    <div class="pomelo-mysql-tabbar" ref="tabbar" style="border-top: 1px solid #444">
+        <a class="pomelo-mysql-tabbar-item minor">
+            Results
+        </a>
+    </div>
+    <div class="pomelo-query-result-outer" v-bind:id="'pomelo-mysql-query-result-' + instance + '-' + database" v-bind:style="{ 'height': resultHeight }">
+    </div>
+</div>

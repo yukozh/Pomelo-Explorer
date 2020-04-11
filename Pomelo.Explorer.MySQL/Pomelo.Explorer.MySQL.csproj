@@ -17,6 +17,7 @@
     <None Remove="Resource\browse\menu.css" />
     <None Remove="Resource\browse\menu.html" />
     <None Remove="Resource\browse\menu.js" />
+    <None Remove="Resource\browse\query-edit.js" />
     <None Remove="Resource\browse\query.css" />
     <None Remove="Resource\browse\query.html" />
     <None Remove="Resource\browse\query.js" />
@@ -35,6 +36,7 @@
     <None Remove="Resource\create\index.css" />
     <None Remove="Resource\create\index.html" />
     <None Remove="Resource\create\index.js" />
+    <None Remove="Resource\query-edit.html" />
   </ItemGroup>
 
   <ItemGroup>

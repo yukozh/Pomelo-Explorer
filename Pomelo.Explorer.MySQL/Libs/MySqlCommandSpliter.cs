@@ -132,25 +132,39 @@ namespace Pomelo.Explorer.MySQL
             using (var cmd = new MySqlCommand($"SHOW COLUMNS FROM `{table}`", conn))
             using (var reader = cmd.ExecuteReader())
             {
-                yield return new MySQLTableColumn
+                while (reader.Read())
                 {
-                    Field = reader[0].ToString(),
-                    Type = reader[1].ToString(),
-                    Null = reader[2].ToString(),
-                    Key = reader[3].ToString(),
-                    Default = DBNull.Value == reader[4] ? null : reader[4].ToString(),
-                    Extra = reader[5].ToString()
-                };
+                    yield return new MySQLTableColumn
+                    {
+                        Field = reader[0].ToString(),
+                        Type = reader[1].ToString(),
+                        Null = reader[2].ToString(),
+                        Key = reader[3].ToString(),
+                        Default = DBNull.Value == reader[4] ? null : reader[4].ToString(),
+                        Extra = reader[5].ToString()
+                    };
+                }
             }
         }
 
         public static bool IsContainedKeys(IEnumerable<string> queryColumns, IEnumerable<MySQLTableColumn> tableColumns)
         {
+            if (queryColumns != null && queryColumns.Count() == 1 && queryColumns.First() == "*")
+            {
+                return true;
+            }
+
             var keys = tableColumns.Where(x => x.Key == "PRI").Select(x => x.Field).ToList();
             if (keys.Count() == 0)
             {
                 return false;
             }
+
+            if (queryColumns == null)
+            {
+                return false;
+            }
+
             return keys.All(x => queryColumns.Contains(x));
         }
     }

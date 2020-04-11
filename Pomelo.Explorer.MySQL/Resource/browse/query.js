@@ -1,9 +1,9 @@
 ﻿component.menu = '/static/mysql/Resource/browse/menu';
 
 component.created = function () {
-    var id = 'pomelo-mysql-table-' + this.instance + '-' + this.database;
+    var id = 'pomelo-mysql-query-' + this.instance + '-' + this.database;
     this.$cont = new PomeloComponentContainer('#' + id, this);
-    this.$cont.open('/static/mysql/Resource/browse/table-list', { instance: this.instance, database: this.database });
+    this.$cont.open('/static/mysql/Resource/browse/query-edit', { instance: this.instance, database: this.database });
 };
 
 component.data = function () {

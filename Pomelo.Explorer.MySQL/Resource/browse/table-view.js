@@ -1,11 +1,15 @@
 ﻿component.menu = '/static/mysql/Resource/browse/menu';
 
 component.created = function () {
-    this.getTable({ database: this.database, table: this.table, expression: null, page: 0 });
+    if (!this.isQuery) {
+        this.getTable({ database: this.database, table: this.table, expression: null, page: 0 });
+    }
 };
 
 component.data = function () {
     return {
+        isQuery: false,
+        readonly: false,
         isView: false,
         instance: null,
         database: null,

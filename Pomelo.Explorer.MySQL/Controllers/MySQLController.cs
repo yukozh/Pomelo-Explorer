@@ -239,6 +239,8 @@ namespace Pomelo.Explorer.MySQL.Controllers
             using (var command = new MySqlCommand())
             {
                 command.Connection = conn;
+                command.CommandText = $"USE `{request.Database}`;";
+                command.ExecuteNonQuery();
                 foreach (var x in splitedCommands)
                 {
                     var res = new MySqlQueryResult();
@@ -247,13 +249,13 @@ namespace Pomelo.Explorer.MySQL.Controllers
                     res.Table = analyze.Table;
                     command.CommandText = x;
                     var begin = DateTime.Now;
-                    var tableColumns = MySqlCommandSpliter.GetTableColumns(res.Table, conn);
-                    res.Readonly = !(analyze.IsSimpleSelect && MySqlCommandSpliter.IsContainedKeys(res.Columns, tableColumns));
+                    var tableColumns = MySqlCommandSpliter.GetTableColumns(res.Table, conn).ToList();
+                    res.Readonly = !(analyze.IsSimpleSelect && MySqlCommandSpliter.IsContainedKeys(analyze.Columns, tableColumns));
                     using (var reader = command.ExecuteReader())
                     {
                         if (res.Readonly)
                         {
-                            res.Columns = GenerateColumnsFromReader(reader);
+                            res.Columns = GenerateColumnsFromReader(reader).ToList();
                             res.ColumnTypes = null;
                             res.Nullable = null;
                             res.Keys = null;
@@ -265,6 +267,10 @@ namespace Pomelo.Explorer.MySQL.Controllers
                             if (res.Columns.Count() == 1 && res.Columns.First() == "*")
                             {
                                 res.Columns = tableColumns.Select(x => x.Field);
+                            }
+                            else
+                            {
+                                res.Columns = analyze.Columns;
                             }
                             res.ColumnTypes = res.Columns.Select(x => tableColumns.SingleOrDefault(y => y.Field == x)?.Type);
                             res.Nullable = res.Columns.Select(x => tableColumns.SingleOrDefault(y => y.Field == x)?.Null);
@@ -297,7 +303,7 @@ namespace Pomelo.Explorer.MySQL.Controllers
                         }
                     }
                     var end = DateTime.Now;
-                    res.TimeSpan = Convert.ToInt64((begin - end).TotalMilliseconds);
+                    res.TimeSpan = Convert.ToInt64((end - begin).TotalMilliseconds);
                     ret.Add(res);
                 }
             }
