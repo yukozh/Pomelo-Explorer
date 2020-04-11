@@ -16,7 +16,7 @@ namespace Pomelo.Explorer.MySQL
 
         public static async Task EnsureOpenedAsync(this MySqlConnection conn, CancellationToken token = default)
         {
-            if (conn.State == System.Data.ConnectionState.Closed)
+            if (conn.State != System.Data.ConnectionState.Open)
             {
                 await conn.OpenAsync(token);
             }
