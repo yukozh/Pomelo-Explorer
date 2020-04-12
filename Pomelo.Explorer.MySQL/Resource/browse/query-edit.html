@@ -8,7 +8,7 @@
         </a>
     </div>
     <div class="pomelo-query-editor" v-bind:id="'editor-' + timestamp"></div>
-    <div class="pomelo-mysql-tabbar" ref="tabbar" style="border-top: 1px solid #444">
+    <div v-if="opened.length > 0" class="pomelo-mysql-tabbar" ref="tabbar" style="border-top: 1px solid #444">
         <a class="pomelo-mysql-tabbar-item minor">
             Results
         </a>
