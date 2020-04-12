@@ -19,7 +19,7 @@ namespace Pomelo.Explorer.MySQL.Controllers
         {
             if (!ConnectionHelper.Connections.ContainsKey(request.InstanceId))
             {
-                var client = new MySqlConnection($"Server={request.Address}; Port={request.Port}; Uid={request.Username}; Pwd={request.Password}; Pooling=False; AllowUserVariables=True;");
+                var client = new MySqlConnection($"Server={request.Address}; Port={request.Port}; Uid={request.Username}; Pwd={request.Password}; Pooling=False; AllowUserVariables=True; Keepalive=60;");
                 if (string.IsNullOrEmpty(request.InstanceId))
                 {
                     request.InstanceId = DateTime.UtcNow.Ticks.ToString();

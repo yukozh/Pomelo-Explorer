@@ -3,7 +3,7 @@
         <a class="pomelo-mysql-table-toolbar-item" v-on:click="$root.open('table-view', { instance: instance, database: database, table: selected }, selected)">
             <i class="fa fa-folder-open-o"></i> Open
         </a>
-        <a class="pomelo-mysql-table-toolbar-item">
+        <a class="pomelo-mysql-table-toolbar-item" v-on:click="$root.open('table-design', { instance: instance, database: database, table: selected }, '[Design] ' + selected)">
             <i class="fa fa-pencil"></i> Design
         </a>
         <a class="pomelo-mysql-table-toolbar-item">

@@ -69,3 +69,29 @@
     .pomelo-mysql-tabbar-item:hover .close {
         visibility: visible;
     }
+
+.pomelo-mysql-design-toggle {
+    line-height: 40px;
+    padding: 0 15px;
+    background: rgb(36,37,37);
+    border-bottom: 1px solid #444;
+    font-size: 12px;
+}
+
+    .pomelo-mysql-design-toggle:hover {
+        background: rgb(50,50,50);
+        color: #fff;
+    }
+
+    .pomelo-mysql-design-toggle .toggle-icon {
+        float: right;
+        width: 15px;
+        text-align: center;
+        height: 40px;
+        line-height: 40px;
+    }
+
+    .pomelo-mysql-design-toggle .section-icon {
+        width: 20px;
+        text-align: center;
+    }

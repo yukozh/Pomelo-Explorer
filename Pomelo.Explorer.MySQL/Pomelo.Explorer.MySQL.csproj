@@ -21,6 +21,8 @@
     <None Remove="Resource\browse\query.css" />
     <None Remove="Resource\browse\query.html" />
     <None Remove="Resource\browse\query.js" />
+    <None Remove="Resource\browse\table-design.html" />
+    <None Remove="Resource\browse\table-design.js" />
     <None Remove="Resource\browse\table-list.html" />
     <None Remove="Resource\browse\table-list.js" />
     <None Remove="Resource\browse\table-view.html" />

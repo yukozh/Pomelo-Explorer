@@ -1,0 +1,48 @@
+﻿<div>
+    <div class="pomelo-mysql-table-toolbar" ref="toolbar">
+        <a v-on:click="save" class="pomelo-mysql-table-toolbar-item">
+            <i class="fa fa-save"></i> Save
+        </a>
+        <a class="pomelo-mysql-table-toolbar-item" v-on:click="discard">
+            <i class="fa fa-rotate-left"></i> Discard
+        </a>
+    </div>
+    <div class="pomelo-table-outer" v-bind:style="{ 'height': tableHeight }">
+        <div class="pomelo-mysql-design-toggle" v-on:click="active = 'columns'">
+            <i class="fa fa-columns section-icon"></i> Columns <i class="fa toggle-icon" v-bind:class="{ 'fa-chevron-down': active === 'columns', 'fa-chevron-right': active !== 'columns' }"></i>
+        </div>
+        <div v-show="active === 'columns'">
+
+        </div>
+        <div class="pomelo-mysql-design-toggle" v-on:click="active = 'indexes'">
+            <i class="fa fa-sort-numeric-asc section-icon"></i> Indexes <i class="fa toggle-icon" v-bind:class="{ 'fa-chevron-down': active === 'indexes', 'fa-chevron-right': active !== 'indexes' }"></i>
+        </div>
+        <div v-show="active === 'indexes'">
+
+        </div>
+        <div class="pomelo-mysql-design-toggle" v-on:click="active = 'foreignkeys'">
+            <i class="fa fa-chain-broken section-icon"></i> Foreign Keys <i class="fa toggle-icon" v-bind:class="{ 'fa-chevron-down': active === 'foreignkeys', 'fa-chevron-right': active !== 'foreignkeys' }"></i>
+        </div>
+        <div v-show="active === 'foreignkeys'">
+
+        </div>
+        <div class="pomelo-mysql-design-toggle" v-on:click="active = 'triggers'">
+            <i class="fa fa-bolt section-icon"></i> Triggers <i class="fa toggle-icon" v-bind:class="{ 'fa-chevron-down': active === 'triggers', 'fa-chevron-right': active !== 'triggers' }"></i>
+        </div>
+        <div v-show="active === 'triggers'">
+
+        </div>
+        <div class="pomelo-mysql-design-toggle" v-on:click="active = 'options'">
+            <i class="fa fa-cog section-icon"></i> Options <i class="fa toggle-icon" v-bind:class="{ 'fa-chevron-down': active === 'options', 'fa-chevron-right': active !== 'options' }"></i>
+        </div>
+        <div v-show="active === 'options'">
+
+        </div>
+        <div class="pomelo-mysql-design-toggle" v-on:click="active = 'comments'">
+            <i class="fa fa-comment-o section-icon"></i> Comments <i class="fa toggle-icon" v-bind:class="{ 'fa-chevron-down': active === 'comments', 'fa-chevron-right': active !== 'comments' }"></i>
+        </div>
+        <div v-show="active === 'comments'">
+
+        </div>
+    </div>
+</div>
