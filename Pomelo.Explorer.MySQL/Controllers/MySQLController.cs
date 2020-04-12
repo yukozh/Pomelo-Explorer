@@ -17,13 +17,16 @@ namespace Pomelo.Explorer.MySQL.Controllers
         [HttpPost]
         public IActionResult CreateConnection([FromBody]CreateConnectionRequest request)
         {
-            var client = new MySqlConnection($"Server={request.Address}; Port={request.Port}; Uid={request.Username}; Pwd={request.Password}; Pooling=False; AllowUserVariables=True;");
-            if (string.IsNullOrEmpty(request.InstanceId))
-            { 
-                request.InstanceId = DateTime.UtcNow.Ticks.ToString();
+            if (!ConnectionHelper.Connections.ContainsKey(request.InstanceId))
+            {
+                var client = new MySqlConnection($"Server={request.Address}; Port={request.Port}; Uid={request.Username}; Pwd={request.Password}; Pooling=False; AllowUserVariables=True;");
+                if (string.IsNullOrEmpty(request.InstanceId))
+                {
+                    request.InstanceId = DateTime.UtcNow.Ticks.ToString();
+                }
+                ConnectionHelper.Connections.Add(request.InstanceId, client);
             }
-            ConnectionHelper.Connections.Add(request.InstanceId, client);
-            return Json(new CreateConnectionResponse 
+            return Json(new CreateConnectionResponse
             {
                 Id = request.InstanceId
             });
