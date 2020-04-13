@@ -11,8 +11,73 @@
         <div class="pomelo-mysql-design-toggle" v-on:click="active = 'columns'">
             <i class="fa fa-columns section-icon"></i> Columns <i class="fa toggle-icon" v-bind:class="{ 'fa-chevron-down': active === 'columns', 'fa-chevron-right': active !== 'columns' }"></i>
         </div>
-        <div v-show="active === 'columns'">
-
+        <div class="pomelo-mysql-design-table-content" v-show="active === 'columns'">
+            <div v-for="(x, i) in data.columns">
+                <div class="pomelo-mysql-design-table-column" v-bind:class="{ 'active': toggle[i] }" v-on:click="$set(toggle, i, !toggle[i])"><i class="fa fa-columns"></i> {{ x.name }}</div>
+                <div v-show="toggle[i]" class="pomelo-mysql-design-table-fields">
+                    <div class="col-md-4">
+                        <label>
+                            Type<br />
+                            <input type="text" class="pomelo-mysql-design-textbox" v-model="data.columns[i].type" />
+                        </label>
+                    </div>
+                    <div class="col-md-4" v-if="data.columns[i].datetimePrecision">
+                        <label>
+                            Precision<br />
+                            <input type="text" class="pomelo-mysql-design-textbox" v-model="data.columns[i].datetimePrecision" />
+                        </label>
+                    </div>
+                    <div class="col-md-4" v-if="data.columns[i].charMaxLength">
+                        <label>
+                            Length<br />
+                            <input type="text" class="pomelo-mysql-design-textbox" v-model="data.columns[i].charMaxLength" />
+                        </label>
+                    </div>
+                    <div class="col-md-4" v-if="data.columns[i].numericPrecision">
+                        <label>
+                            Precision<br />
+                            <input type="text" class="pomelo-mysql-design-textbox" v-model="data.columns[i].numericPrecision" />
+                        </label>
+                    </div>
+                    <div class="col-md-4" v-if="data.columns[i].numericScale">
+                        <label>
+                            Scale<br />
+                            <input type="text" class="pomelo-mysql-design-textbox" v-model="data.columns[i].numericScale" />
+                        </label>
+                    </div>
+                    <div class="col-md-4" v-if="data.columns[i].default">
+                        <label>
+                            Default<br />
+                            <input type="text" class="pomelo-mysql-design-textbox" v-model="data.columns[i].default" />
+                        </label>
+                    </div>
+                    <div class="col-md-4">
+                        <label>
+                            Nullable<br />
+                            <input type="checkbox" class="pomelo-mysql-design-checkbox" v-model="data.columns[i].nullable" />
+                        </label>
+                    </div>
+                    <div class="col-md-4" v-if="false">
+                        <label>
+                            Auto Increment<br />
+                            <input type="checkbox" class="pomelo-mysql-design-checkbox" />
+                        </label>
+                    </div>
+                    <div class="col-md-4" v-if="data.columns[i].charset">
+                        <label>
+                            Charset<br />
+                            <input type="text" class="pomelo-mysql-design-textbox" v-model="data.columns[i].charset" />
+                        </label>
+                    </div>
+                    <div class="col-md-4" v-if="data.columns[i].collation">
+                        <label>
+                            Collation<br />
+                            <input type="text" class="pomelo-mysql-design-textbox" v-model="data.columns[i].collation" />
+                        </label>
+                    </div>
+                    <div style="clear: both"></div>
+                </div>
+            </div>
         </div>
         <div class="pomelo-mysql-design-toggle" v-on:click="active = 'indexes'">
             <i class="fa fa-sort-numeric-asc section-icon"></i> Indexes <i class="fa toggle-icon" v-bind:class="{ 'fa-chevron-down': active === 'indexes', 'fa-chevron-right': active !== 'indexes' }"></i>

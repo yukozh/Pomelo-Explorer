@@ -1,6 +1,6 @@
 ﻿namespace Pomelo.Explorer.MySQL.Models
 {
-    public class MySQLTableColumn
+    public class MySqlTableColumn
     {
         public string Field { get; set; }
 

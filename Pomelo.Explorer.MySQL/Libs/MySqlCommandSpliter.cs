@@ -126,7 +126,7 @@ namespace Pomelo.Explorer.MySQL
             return ret;
         }
 
-        public static IEnumerable<MySQLTableColumn> GetTableColumns(string table, MySqlConnection conn)
+        public static IEnumerable<MySqlTableColumn> GetTableColumns(string table, MySqlConnection conn)
         {
             conn.EnsureOpened();
             using (var cmd = new MySqlCommand($"SHOW COLUMNS FROM `{table}`", conn))
@@ -134,7 +134,7 @@ namespace Pomelo.Explorer.MySQL
             {
                 while (reader.Read())
                 {
-                    yield return new MySQLTableColumn
+                    yield return new MySqlTableColumn
                     {
                         Field = reader[0].ToString(),
                         Type = reader[1].ToString(),
@@ -147,7 +147,7 @@ namespace Pomelo.Explorer.MySQL
             }
         }
 
-        public static bool IsContainedKeys(IEnumerable<string> queryColumns, IEnumerable<MySQLTableColumn> tableColumns)
+        public static bool IsContainedKeys(IEnumerable<string> queryColumns, IEnumerable<MySqlTableColumn> tableColumns)
         {
             if (queryColumns != null && queryColumns.Count() == 1 && queryColumns.First() == "*")
             {

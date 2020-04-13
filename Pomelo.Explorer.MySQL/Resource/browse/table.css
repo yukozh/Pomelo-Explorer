@@ -95,3 +95,50 @@
         width: 20px;
         text-align: center;
     }
+
+.pomelo-mysql-design-table-content {
+    padding: 15px;
+    font-size: 12px;
+}
+
+.pomelo-mysql-design-table-column {
+    line-height: 30px;
+    font-size: 12px;
+    border-radius: 5px;
+    padding: 0 10px;
+    margin: 0 -5px;
+}
+
+.pomelo-mysql-design-table-fields label {
+    font-weight: bold;
+}
+
+    .pomelo-mysql-design-table-column:hover, .pomelo-mysql-design-table-column.active {
+        background: rgb(45,45,45);
+    }
+
+.pomelo-mysql-design-textbox {
+    border: none;
+    background: rgb(45,45,45);
+    color: #ccc;
+    width: calc(100% - 20px);
+    line-height: 30px;
+    padding: 0 10px;
+    margin: 10px 0;
+}
+
+.pomelo-mysql-design-table-fields {
+    padding: 15px 0;
+    border-bottom: 1px solid #444;
+    margin-bottom: 15px;
+}
+
+    .pomelo-mysql-design-table-fields .col-md-4 {
+        height: 66px;
+    }
+
+.pomelo-mysql-design-checkbox {
+    height: 20px;
+    width: 20px;
+    margin: 15px 0;
+}
